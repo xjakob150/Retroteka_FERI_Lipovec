@@ -1,0 +1,53 @@
+# Okoljske spremenljivke in skrivnosti (ključa za IGDB in eBay)
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Django
+*.log
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+
+# Testi in pokritost kode
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Node / Vite
+node_modules/
+dist/
+dist-ssr/
+.vite/
+*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Docker
+docker-compose.override.yml
+
+# Urejevalniki in IDE
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*~
+
+# Lokalne nastavitve Claude Code
+.claude/settings.local.json
+
+# Operacijski sistem
+.DS_Store
+Thumbs.db
