@@ -4,6 +4,8 @@ Spletna evidenca zbirk fizičnih retro iger.
 
 Zbiratelji retro iger zbirko pogosto vodijo v Excelu ali po spominu, zato ne vedo zanesljivo, kaj že imajo in koliko je zbirka vredna. V Retroteki uporabnik igro poišče, podatki o njej (naslov, platforme, naslovnica) se preberejo iz IGDB, sam pa vpiše le lastnosti svojega izvoda: platformo, stanje in nakupno ceno. Sistem iz eBay doda okvirno tržno ceno in sešteje vrednost zbirke. Igre ureja v poljubno število zbirk, ki so lahko javne ali zasebne. Podprte so fizične igre za platforme do vključno 7. generacije (PS3, Xbox 360, Wii).
 
+Dodatek
+
 ## Uporabljene tehnologije
 
 | Področje | Tehnologije in orodja |
