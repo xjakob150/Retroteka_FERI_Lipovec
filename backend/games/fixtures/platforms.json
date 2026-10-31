@@ -1,0 +1,2642 @@
+[
+  {
+    "model": "games.platform",
+    "pk": 3,
+    "fields": {
+      "igdb_id": 3,
+      "name": "Linux",
+      "abbreviation": "Linux",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 4,
+    "fields": {
+      "igdb_id": 4,
+      "name": "Nintendo 64",
+      "abbreviation": "N64",
+      "manufacturer": "Nintendo",
+      "generation": 5,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 5,
+    "fields": {
+      "igdb_id": 5,
+      "name": "Wii",
+      "abbreviation": "Wii",
+      "manufacturer": "Nintendo",
+      "generation": 7,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 6,
+    "fields": {
+      "igdb_id": 6,
+      "name": "PC (Microsoft Windows)",
+      "abbreviation": "PC",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 7,
+    "fields": {
+      "igdb_id": 7,
+      "name": "PlayStation",
+      "abbreviation": "PS1",
+      "manufacturer": "Sony",
+      "generation": 5,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 8,
+    "fields": {
+      "igdb_id": 8,
+      "name": "PlayStation 2",
+      "abbreviation": "PS2",
+      "manufacturer": "Sony",
+      "generation": 6,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 9,
+    "fields": {
+      "igdb_id": 9,
+      "name": "PlayStation 3",
+      "abbreviation": "PS3",
+      "manufacturer": "Sony",
+      "generation": 7,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 11,
+    "fields": {
+      "igdb_id": 11,
+      "name": "Xbox",
+      "abbreviation": "Xbox",
+      "manufacturer": "Microsoft",
+      "generation": 6,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 12,
+    "fields": {
+      "igdb_id": 12,
+      "name": "Xbox 360",
+      "abbreviation": "X360",
+      "manufacturer": "Microsoft",
+      "generation": 7,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 13,
+    "fields": {
+      "igdb_id": 13,
+      "name": "DOS",
+      "abbreviation": "DOS",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 14,
+    "fields": {
+      "igdb_id": 14,
+      "name": "Mac",
+      "abbreviation": "Mac",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 15,
+    "fields": {
+      "igdb_id": 15,
+      "name": "Commodore C64/128/MAX",
+      "abbreviation": "C64",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 16,
+    "fields": {
+      "igdb_id": 16,
+      "name": "Amiga",
+      "abbreviation": "Amiga",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 18,
+    "fields": {
+      "igdb_id": 18,
+      "name": "Nintendo Entertainment System",
+      "abbreviation": "NES",
+      "manufacturer": "Nintendo",
+      "generation": 3,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 19,
+    "fields": {
+      "igdb_id": 19,
+      "name": "Super Nintendo Entertainment System",
+      "abbreviation": "SNES",
+      "manufacturer": "Nintendo",
+      "generation": 4,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 20,
+    "fields": {
+      "igdb_id": 20,
+      "name": "Nintendo DS",
+      "abbreviation": "DS",
+      "manufacturer": "Nintendo",
+      "generation": 7,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 21,
+    "fields": {
+      "igdb_id": 21,
+      "name": "Nintendo GameCube",
+      "abbreviation": "GC",
+      "manufacturer": "Nintendo",
+      "generation": 6,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 22,
+    "fields": {
+      "igdb_id": 22,
+      "name": "Game Boy Color",
+      "abbreviation": "GBC",
+      "manufacturer": "Nintendo",
+      "generation": 5,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 23,
+    "fields": {
+      "igdb_id": 23,
+      "name": "Dreamcast",
+      "abbreviation": "DC",
+      "manufacturer": "Sega",
+      "generation": 6,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 24,
+    "fields": {
+      "igdb_id": 24,
+      "name": "Game Boy Advance",
+      "abbreviation": "GBA",
+      "manufacturer": "Nintendo",
+      "generation": 6,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 25,
+    "fields": {
+      "igdb_id": 25,
+      "name": "Amstrad CPC",
+      "abbreviation": "ACPC",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 26,
+    "fields": {
+      "igdb_id": 26,
+      "name": "ZX Spectrum",
+      "abbreviation": "ZXS",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 27,
+    "fields": {
+      "igdb_id": 27,
+      "name": "MSX",
+      "abbreviation": "MSX",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 29,
+    "fields": {
+      "igdb_id": 29,
+      "name": "Sega Mega Drive/Genesis",
+      "abbreviation": "MD",
+      "manufacturer": "Sega",
+      "generation": 4,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 30,
+    "fields": {
+      "igdb_id": 30,
+      "name": "Sega 32X",
+      "abbreviation": "32X",
+      "manufacturer": "Sega",
+      "generation": 4,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 32,
+    "fields": {
+      "igdb_id": 32,
+      "name": "Sega Saturn",
+      "abbreviation": "Saturn",
+      "manufacturer": "Sega",
+      "generation": 5,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 33,
+    "fields": {
+      "igdb_id": 33,
+      "name": "Game Boy",
+      "abbreviation": "GB",
+      "manufacturer": "Nintendo",
+      "generation": 4,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 34,
+    "fields": {
+      "igdb_id": 34,
+      "name": "Android",
+      "abbreviation": "Android",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 35,
+    "fields": {
+      "igdb_id": 35,
+      "name": "Sega Game Gear",
+      "abbreviation": "GG",
+      "manufacturer": "Sega",
+      "generation": 4,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 37,
+    "fields": {
+      "igdb_id": 37,
+      "name": "Nintendo 3DS",
+      "abbreviation": "3DS",
+      "manufacturer": "",
+      "generation": 8,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 38,
+    "fields": {
+      "igdb_id": 38,
+      "name": "PlayStation Portable",
+      "abbreviation": "PSP",
+      "manufacturer": "Sony",
+      "generation": 7,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 39,
+    "fields": {
+      "igdb_id": 39,
+      "name": "iOS",
+      "abbreviation": "iOS",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 41,
+    "fields": {
+      "igdb_id": 41,
+      "name": "Wii U",
+      "abbreviation": "WiiU",
+      "manufacturer": "",
+      "generation": 8,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 42,
+    "fields": {
+      "igdb_id": 42,
+      "name": "N-Gage",
+      "abbreviation": "NGage",
+      "manufacturer": "",
+      "generation": 6,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 44,
+    "fields": {
+      "igdb_id": 44,
+      "name": "Tapwave Zodiac",
+      "abbreviation": "zod",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 46,
+    "fields": {
+      "igdb_id": 46,
+      "name": "PlayStation Vita",
+      "abbreviation": "Vita",
+      "manufacturer": "",
+      "generation": 8,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 47,
+    "fields": {
+      "igdb_id": 47,
+      "name": "Virtual Console",
+      "abbreviation": "VC",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 48,
+    "fields": {
+      "igdb_id": 48,
+      "name": "PlayStation 4",
+      "abbreviation": "PS4",
+      "manufacturer": "",
+      "generation": 8,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 49,
+    "fields": {
+      "igdb_id": 49,
+      "name": "Xbox One",
+      "abbreviation": "XONE",
+      "manufacturer": "",
+      "generation": 8,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 50,
+    "fields": {
+      "igdb_id": 50,
+      "name": "3DO Interactive Multiplayer",
+      "abbreviation": "3DO",
+      "manufacturer": "",
+      "generation": 5,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 51,
+    "fields": {
+      "igdb_id": 51,
+      "name": "Family Computer Disk System",
+      "abbreviation": "fds",
+      "manufacturer": "",
+      "generation": 3,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 52,
+    "fields": {
+      "igdb_id": 52,
+      "name": "Arcade",
+      "abbreviation": "Arcade",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 53,
+    "fields": {
+      "igdb_id": 53,
+      "name": "MSX2",
+      "abbreviation": "MSX2",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 55,
+    "fields": {
+      "igdb_id": 55,
+      "name": "Legacy Mobile Device",
+      "abbreviation": "Mobile",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 57,
+    "fields": {
+      "igdb_id": 57,
+      "name": "WonderSwan",
+      "abbreviation": "WonderSwan",
+      "manufacturer": "",
+      "generation": 5,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 58,
+    "fields": {
+      "igdb_id": 58,
+      "name": "Super Famicom",
+      "abbreviation": "SFC",
+      "manufacturer": "Nintendo",
+      "generation": 4,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 59,
+    "fields": {
+      "igdb_id": 59,
+      "name": "Atari 2600",
+      "abbreviation": "2600",
+      "manufacturer": "Atari",
+      "generation": 2,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 60,
+    "fields": {
+      "igdb_id": 60,
+      "name": "Atari 7800",
+      "abbreviation": "7800",
+      "manufacturer": "Atari",
+      "generation": 3,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 61,
+    "fields": {
+      "igdb_id": 61,
+      "name": "Atari Lynx",
+      "abbreviation": "Lynx",
+      "manufacturer": "Atari",
+      "generation": 4,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 62,
+    "fields": {
+      "igdb_id": 62,
+      "name": "Atari Jaguar",
+      "abbreviation": "Jaguar",
+      "manufacturer": "Atari",
+      "generation": 5,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 63,
+    "fields": {
+      "igdb_id": 63,
+      "name": "Atari ST/STE",
+      "abbreviation": "Atari-ST",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 64,
+    "fields": {
+      "igdb_id": 64,
+      "name": "Sega Master System/Mark III",
+      "abbreviation": "SMS",
+      "manufacturer": "Sega",
+      "generation": 3,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 65,
+    "fields": {
+      "igdb_id": 65,
+      "name": "Atari 8-bit",
+      "abbreviation": "Atari8bit",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 66,
+    "fields": {
+      "igdb_id": 66,
+      "name": "Atari 5200",
+      "abbreviation": "5200",
+      "manufacturer": "Atari",
+      "generation": 2,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 67,
+    "fields": {
+      "igdb_id": 67,
+      "name": "Intellivision",
+      "abbreviation": "INTV",
+      "manufacturer": "Mattel",
+      "generation": 2,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 68,
+    "fields": {
+      "igdb_id": 68,
+      "name": "ColecoVision",
+      "abbreviation": "CV",
+      "manufacturer": "Coleco",
+      "generation": 2,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 69,
+    "fields": {
+      "igdb_id": 69,
+      "name": "BBC Microcomputer System",
+      "abbreviation": "bbcmicro",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 70,
+    "fields": {
+      "igdb_id": 70,
+      "name": "Vectrex",
+      "abbreviation": "Vectrex",
+      "manufacturer": "GCE",
+      "generation": 2,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 71,
+    "fields": {
+      "igdb_id": 71,
+      "name": "Commodore VIC-20",
+      "abbreviation": "vic-20",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 72,
+    "fields": {
+      "igdb_id": 72,
+      "name": "Ouya",
+      "abbreviation": "Ouya",
+      "manufacturer": "",
+      "generation": 8,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 73,
+    "fields": {
+      "igdb_id": 73,
+      "name": "BlackBerry OS",
+      "abbreviation": "blackberry",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 74,
+    "fields": {
+      "igdb_id": 74,
+      "name": "Windows Phone",
+      "abbreviation": "Win Phone",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 75,
+    "fields": {
+      "igdb_id": 75,
+      "name": "Apple II",
+      "abbreviation": "Apple][",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 77,
+    "fields": {
+      "igdb_id": 77,
+      "name": "Sharp X1",
+      "abbreviation": "x1",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 78,
+    "fields": {
+      "igdb_id": 78,
+      "name": "Sega CD",
+      "abbreviation": "Sega CD",
+      "manufacturer": "Sega",
+      "generation": 4,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 79,
+    "fields": {
+      "igdb_id": 79,
+      "name": "Neo Geo MVS",
+      "abbreviation": "neogeomvs",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 80,
+    "fields": {
+      "igdb_id": 80,
+      "name": "Neo Geo AES",
+      "abbreviation": "Neo Geo",
+      "manufacturer": "SNK",
+      "generation": 4,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 82,
+    "fields": {
+      "igdb_id": 82,
+      "name": "Web browser",
+      "abbreviation": "browser",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 84,
+    "fields": {
+      "igdb_id": 84,
+      "name": "SG-1000",
+      "abbreviation": "sg1000",
+      "manufacturer": "",
+      "generation": 3,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 85,
+    "fields": {
+      "igdb_id": 85,
+      "name": "Donner Model 30",
+      "abbreviation": "donner30",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 86,
+    "fields": {
+      "igdb_id": 86,
+      "name": "TurboGrafx-16/PC Engine",
+      "abbreviation": "TG-16",
+      "manufacturer": "NEC",
+      "generation": 4,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 87,
+    "fields": {
+      "igdb_id": 87,
+      "name": "Virtual Boy",
+      "abbreviation": "virtualboy",
+      "manufacturer": "",
+      "generation": 5,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 88,
+    "fields": {
+      "igdb_id": 88,
+      "name": "Odyssey",
+      "abbreviation": "odyssey",
+      "manufacturer": "",
+      "generation": 1,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 89,
+    "fields": {
+      "igdb_id": 89,
+      "name": "Microvision",
+      "abbreviation": "microvision",
+      "manufacturer": "",
+      "generation": 2,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 90,
+    "fields": {
+      "igdb_id": 90,
+      "name": "Commodore PET",
+      "abbreviation": "cpet",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 91,
+    "fields": {
+      "igdb_id": 91,
+      "name": "Bally Astrocade",
+      "abbreviation": "astrocade",
+      "manufacturer": "",
+      "generation": 2,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 93,
+    "fields": {
+      "igdb_id": 93,
+      "name": "Commodore 16",
+      "abbreviation": "C16",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 94,
+    "fields": {
+      "igdb_id": 94,
+      "name": "Commodore Plus/4",
+      "abbreviation": "C+4",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 95,
+    "fields": {
+      "igdb_id": 95,
+      "name": "PDP-1",
+      "abbreviation": "pdp1",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 96,
+    "fields": {
+      "igdb_id": 96,
+      "name": "PDP-10",
+      "abbreviation": "pdp10",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 97,
+    "fields": {
+      "igdb_id": 97,
+      "name": "PDP-8",
+      "abbreviation": "pdp-8",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 98,
+    "fields": {
+      "igdb_id": 98,
+      "name": "DEC GT40",
+      "abbreviation": "gt40",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 99,
+    "fields": {
+      "igdb_id": 99,
+      "name": "Family Computer",
+      "abbreviation": "FC",
+      "manufacturer": "Nintendo",
+      "generation": 3,
+      "is_supported": true
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 100,
+    "fields": {
+      "igdb_id": 100,
+      "name": "Analogue electronics",
+      "abbreviation": "analogueelectronics",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 101,
+    "fields": {
+      "igdb_id": 101,
+      "name": "Ferranti Nimrod Computer",
+      "abbreviation": "nimrod",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 102,
+    "fields": {
+      "igdb_id": 102,
+      "name": "EDSAC",
+      "abbreviation": "edsac",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 103,
+    "fields": {
+      "igdb_id": 103,
+      "name": "PDP-7",
+      "abbreviation": "pdp-7",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 104,
+    "fields": {
+      "igdb_id": 104,
+      "name": "HP 2100",
+      "abbreviation": "hp2100",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 105,
+    "fields": {
+      "igdb_id": 105,
+      "name": "HP 3000",
+      "abbreviation": "hp3000",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 106,
+    "fields": {
+      "igdb_id": 106,
+      "name": "SDS Sigma 7",
+      "abbreviation": "sdssigma7",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 107,
+    "fields": {
+      "igdb_id": 107,
+      "name": "Call-A-Computer time-shared mainframe computer system",
+      "abbreviation": "call-a-computer",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 108,
+    "fields": {
+      "igdb_id": 108,
+      "name": "PDP-11",
+      "abbreviation": "pdp11",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 109,
+    "fields": {
+      "igdb_id": 109,
+      "name": "CDC Cyber 70",
+      "abbreviation": "cdccyber70",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 110,
+    "fields": {
+      "igdb_id": 110,
+      "name": "PLATO",
+      "abbreviation": "plato",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 111,
+    "fields": {
+      "igdb_id": 111,
+      "name": "Imlac PDS-1",
+      "abbreviation": "imlac-pds1",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 112,
+    "fields": {
+      "igdb_id": 112,
+      "name": "Microcomputer",
+      "abbreviation": "microcomputer",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 113,
+    "fields": {
+      "igdb_id": 113,
+      "name": "OnLive Game System",
+      "abbreviation": "OnLive",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 114,
+    "fields": {
+      "igdb_id": 114,
+      "name": "Amiga CD32",
+      "abbreviation": "Amiga CD32",
+      "manufacturer": "",
+      "generation": 5,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 115,
+    "fields": {
+      "igdb_id": 115,
+      "name": "Apple IIGS",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 116,
+    "fields": {
+      "igdb_id": 116,
+      "name": "Acorn Archimedes",
+      "abbreviation": "Acorn Archimedes",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 117,
+    "fields": {
+      "igdb_id": 117,
+      "name": "Philips CD-i",
+      "abbreviation": "Philips CDI",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 118,
+    "fields": {
+      "igdb_id": 118,
+      "name": "FM Towns",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 119,
+    "fields": {
+      "igdb_id": 119,
+      "name": "Neo Geo Pocket",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 5,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 120,
+    "fields": {
+      "igdb_id": 120,
+      "name": "Neo Geo Pocket Color",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 5,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 121,
+    "fields": {
+      "igdb_id": 121,
+      "name": "Sharp X68000",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 122,
+    "fields": {
+      "igdb_id": 122,
+      "name": "Nuon",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 123,
+    "fields": {
+      "igdb_id": 123,
+      "name": "WonderSwan Color",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 5,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 124,
+    "fields": {
+      "igdb_id": 124,
+      "name": "SwanCrystal",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 125,
+    "fields": {
+      "igdb_id": 125,
+      "name": "PC-8800 Series",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 126,
+    "fields": {
+      "igdb_id": 126,
+      "name": "TRS-80",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 127,
+    "fields": {
+      "igdb_id": 127,
+      "name": "Fairchild Channel F",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 2,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 128,
+    "fields": {
+      "igdb_id": 128,
+      "name": "PC Engine SuperGrafx",
+      "abbreviation": "supergrafx",
+      "manufacturer": "",
+      "generation": 4,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 129,
+    "fields": {
+      "igdb_id": 129,
+      "name": "Texas Instruments TI-99",
+      "abbreviation": "ti-99",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 130,
+    "fields": {
+      "igdb_id": 130,
+      "name": "Nintendo Switch",
+      "abbreviation": "Switch",
+      "manufacturer": "",
+      "generation": 8,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 131,
+    "fields": {
+      "igdb_id": 131,
+      "name": "Super NES CD-ROM System",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 4,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 132,
+    "fields": {
+      "igdb_id": 132,
+      "name": "Amazon Fire TV",
+      "abbreviation": "FireTV",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 133,
+    "fields": {
+      "igdb_id": 133,
+      "name": "Odyssey 2 / Videopac G7000",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 134,
+    "fields": {
+      "igdb_id": 134,
+      "name": "Acorn Electron",
+      "abbreviation": "Acorn Electron",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 135,
+    "fields": {
+      "igdb_id": 135,
+      "name": "Hyper Neo Geo 64",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 136,
+    "fields": {
+      "igdb_id": 136,
+      "name": "Neo Geo CD",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 4,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 137,
+    "fields": {
+      "igdb_id": 137,
+      "name": "New Nintendo 3DS",
+      "abbreviation": "New 3DS",
+      "manufacturer": "",
+      "generation": 8,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 138,
+    "fields": {
+      "igdb_id": 138,
+      "name": "VC 4000",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 2,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 139,
+    "fields": {
+      "igdb_id": 139,
+      "name": "1292 Advanced Programmable Video System",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 2,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 140,
+    "fields": {
+      "igdb_id": 140,
+      "name": "AY-3-8500",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 141,
+    "fields": {
+      "igdb_id": 141,
+      "name": "AY-3-8610",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 142,
+    "fields": {
+      "igdb_id": 142,
+      "name": "PC-50X Family",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 1,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 143,
+    "fields": {
+      "igdb_id": 143,
+      "name": "AY-3-8760",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 144,
+    "fields": {
+      "igdb_id": 144,
+      "name": "AY-3-8710",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 145,
+    "fields": {
+      "igdb_id": 145,
+      "name": "AY-3-8603",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 146,
+    "fields": {
+      "igdb_id": 146,
+      "name": "AY-3-8605",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 147,
+    "fields": {
+      "igdb_id": 147,
+      "name": "AY-3-8606",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 148,
+    "fields": {
+      "igdb_id": 148,
+      "name": "AY-3-8607",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 149,
+    "fields": {
+      "igdb_id": 149,
+      "name": "PC-9800 Series",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 150,
+    "fields": {
+      "igdb_id": 150,
+      "name": "Turbografx-16/PC Engine CD",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 151,
+    "fields": {
+      "igdb_id": 151,
+      "name": "TRS-80 Color Computer",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 152,
+    "fields": {
+      "igdb_id": 152,
+      "name": "FM-7",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 153,
+    "fields": {
+      "igdb_id": 153,
+      "name": "Dragon 32/64",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 154,
+    "fields": {
+      "igdb_id": 154,
+      "name": "Amstrad PCW",
+      "abbreviation": "APCW",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 155,
+    "fields": {
+      "igdb_id": 155,
+      "name": "Tatung Einstein",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 156,
+    "fields": {
+      "igdb_id": 156,
+      "name": "Thomson MO5",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 157,
+    "fields": {
+      "igdb_id": 157,
+      "name": "NEC PC-6000 Series",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 158,
+    "fields": {
+      "igdb_id": 158,
+      "name": "Commodore CDTV",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 159,
+    "fields": {
+      "igdb_id": 159,
+      "name": "Nintendo DSi",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 7,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 161,
+    "fields": {
+      "igdb_id": 161,
+      "name": "Windows Mixed Reality",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 162,
+    "fields": {
+      "igdb_id": 162,
+      "name": "Oculus VR",
+      "abbreviation": "Oculus VR",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 163,
+    "fields": {
+      "igdb_id": 163,
+      "name": "SteamVR",
+      "abbreviation": "Steam VR",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 164,
+    "fields": {
+      "igdb_id": 164,
+      "name": "Daydream",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 165,
+    "fields": {
+      "igdb_id": 165,
+      "name": "PlayStation VR",
+      "abbreviation": "PSVR",
+      "manufacturer": "",
+      "generation": 8,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 166,
+    "fields": {
+      "igdb_id": 166,
+      "name": "Pokémon mini",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 167,
+    "fields": {
+      "igdb_id": 167,
+      "name": "PlayStation 5",
+      "abbreviation": "PS5",
+      "manufacturer": "",
+      "generation": 9,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 169,
+    "fields": {
+      "igdb_id": 169,
+      "name": "Xbox Series X|S",
+      "abbreviation": "Series X|S",
+      "manufacturer": "",
+      "generation": 9,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 170,
+    "fields": {
+      "igdb_id": 170,
+      "name": "Google Stadia",
+      "abbreviation": "Stadia",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 203,
+    "fields": {
+      "igdb_id": 203,
+      "name": "DUPLICATE Stadia",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 236,
+    "fields": {
+      "igdb_id": 236,
+      "name": "Exidy Sorcerer",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 237,
+    "fields": {
+      "igdb_id": 237,
+      "name": "Sol-20",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 238,
+    "fields": {
+      "igdb_id": 238,
+      "name": "DVD Player",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 239,
+    "fields": {
+      "igdb_id": 239,
+      "name": "Blu-ray Player",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 240,
+    "fields": {
+      "igdb_id": 240,
+      "name": "Zeebo",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 7,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 274,
+    "fields": {
+      "igdb_id": 274,
+      "name": "PC-FX",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 5,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 306,
+    "fields": {
+      "igdb_id": 306,
+      "name": "Satellaview",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 4,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 307,
+    "fields": {
+      "igdb_id": 307,
+      "name": "Game & Watch",
+      "abbreviation": "G&W",
+      "manufacturer": "",
+      "generation": 2,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 308,
+    "fields": {
+      "igdb_id": 308,
+      "name": "Playdia",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 5,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 309,
+    "fields": {
+      "igdb_id": 309,
+      "name": "Evercade",
+      "abbreviation": "Evercade",
+      "manufacturer": "",
+      "generation": 8,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 339,
+    "fields": {
+      "igdb_id": 339,
+      "name": "Sega Pico",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 4,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 372,
+    "fields": {
+      "igdb_id": 372,
+      "name": "OOParts",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 373,
+    "fields": {
+      "igdb_id": 373,
+      "name": "Sinclair ZX81",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 374,
+    "fields": {
+      "igdb_id": 374,
+      "name": "Sharp MZ-2200",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 375,
+    "fields": {
+      "igdb_id": 375,
+      "name": "Epoch Cassette Vision",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 2,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 376,
+    "fields": {
+      "igdb_id": 376,
+      "name": "Epoch Super Cassette Vision",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 3,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 377,
+    "fields": {
+      "igdb_id": 377,
+      "name": "Plug & Play",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 378,
+    "fields": {
+      "igdb_id": 378,
+      "name": "Gamate",
+      "abbreviation": "Gamate",
+      "manufacturer": "",
+      "generation": 4,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 379,
+    "fields": {
+      "igdb_id": 379,
+      "name": "Game.com",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 5,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 380,
+    "fields": {
+      "igdb_id": 380,
+      "name": "Casio Loopy",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 381,
+    "fields": {
+      "igdb_id": 381,
+      "name": "Playdate",
+      "abbreviation": "Playdate",
+      "manufacturer": "",
+      "generation": 9,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 382,
+    "fields": {
+      "igdb_id": 382,
+      "name": "Intellivision Amico",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 384,
+    "fields": {
+      "igdb_id": 384,
+      "name": "Oculus Quest",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 385,
+    "fields": {
+      "igdb_id": 385,
+      "name": "Oculus Rift",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 386,
+    "fields": {
+      "igdb_id": 386,
+      "name": "Meta Quest 2",
+      "abbreviation": "Meta Quest 2",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 387,
+    "fields": {
+      "igdb_id": 387,
+      "name": "Oculus Go",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 388,
+    "fields": {
+      "igdb_id": 388,
+      "name": "Gear VR",
+      "abbreviation": "Gear VR",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 389,
+    "fields": {
+      "igdb_id": 389,
+      "name": "AirConsole",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 390,
+    "fields": {
+      "igdb_id": 390,
+      "name": "PlayStation VR2",
+      "abbreviation": "PSVR2",
+      "manufacturer": "",
+      "generation": 9,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 405,
+    "fields": {
+      "igdb_id": 405,
+      "name": "Windows Mobile",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 406,
+    "fields": {
+      "igdb_id": 406,
+      "name": "Sinclair QL",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 407,
+    "fields": {
+      "igdb_id": 407,
+      "name": "HyperScan",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 7,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 408,
+    "fields": {
+      "igdb_id": 408,
+      "name": "Mega Duck/Cougar Boy",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 4,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 409,
+    "fields": {
+      "igdb_id": 409,
+      "name": "Legacy Computer",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 410,
+    "fields": {
+      "igdb_id": 410,
+      "name": "Atari Jaguar CD",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 5,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 411,
+    "fields": {
+      "igdb_id": 411,
+      "name": "Handheld Electronic LCD",
+      "abbreviation": "Handheld",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 412,
+    "fields": {
+      "igdb_id": 412,
+      "name": "Leapster",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 6,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 413,
+    "fields": {
+      "igdb_id": 413,
+      "name": "Leapster Explorer/LeadPad Explorer",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 7,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 414,
+    "fields": {
+      "igdb_id": 414,
+      "name": "LeapTV",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 8,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 415,
+    "fields": {
+      "igdb_id": 415,
+      "name": "Watara/QuickShot Supervision",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 4,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 416,
+    "fields": {
+      "igdb_id": 416,
+      "name": "64DD",
+      "abbreviation": "64DD",
+      "manufacturer": "",
+      "generation": 5,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 417,
+    "fields": {
+      "igdb_id": 417,
+      "name": "Palm OS",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 438,
+    "fields": {
+      "igdb_id": 438,
+      "name": "Arduboy",
+      "abbreviation": "Arduboy",
+      "manufacturer": "",
+      "generation": 8,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 439,
+    "fields": {
+      "igdb_id": 439,
+      "name": "V.Smile",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 6,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 440,
+    "fields": {
+      "igdb_id": 440,
+      "name": "Visual Memory Unit / Visual Memory System",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 6,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 441,
+    "fields": {
+      "igdb_id": 441,
+      "name": "PocketStation",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 5,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 471,
+    "fields": {
+      "igdb_id": 471,
+      "name": "Meta Quest 3",
+      "abbreviation": "Meta Quest 3",
+      "manufacturer": "",
+      "generation": 9,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 472,
+    "fields": {
+      "igdb_id": 472,
+      "name": "visionOS",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 473,
+    "fields": {
+      "igdb_id": 473,
+      "name": "Arcadia 2001",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 474,
+    "fields": {
+      "igdb_id": 474,
+      "name": "Gizmondo",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 7,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 475,
+    "fields": {
+      "igdb_id": 475,
+      "name": "R-Zone",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 5,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 476,
+    "fields": {
+      "igdb_id": 476,
+      "name": "Apple Pippin",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 5,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 477,
+    "fields": {
+      "igdb_id": 477,
+      "name": "Panasonic Jungle",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 8,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 478,
+    "fields": {
+      "igdb_id": 478,
+      "name": "Panasonic M2",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 6,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 479,
+    "fields": {
+      "igdb_id": 479,
+      "name": "Terebikko / See 'n Say Video Phone",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 480,
+    "fields": {
+      "igdb_id": 480,
+      "name": "Super A'Can",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 4,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 481,
+    "fields": {
+      "igdb_id": 481,
+      "name": "Tomy Tutor / Pyuta / Grandstand Tutor",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 482,
+    "fields": {
+      "igdb_id": 482,
+      "name": "Sega CD 32X",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 4,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 486,
+    "fields": {
+      "igdb_id": 486,
+      "name": "Digiblast",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 7,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 487,
+    "fields": {
+      "igdb_id": 487,
+      "name": "LaserActive",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 4,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 504,
+    "fields": {
+      "igdb_id": 504,
+      "name": "Uzebox",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 505,
+    "fields": {
+      "igdb_id": 505,
+      "name": "Elektor TV Games Computer",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 506,
+    "fields": {
+      "igdb_id": 506,
+      "name": "Amstrad GX4000",
+      "abbreviation": "GX4000",
+      "manufacturer": "",
+      "generation": 3,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 507,
+    "fields": {
+      "igdb_id": 507,
+      "name": "Advanced Pico Beena",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 6,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 508,
+    "fields": {
+      "igdb_id": 508,
+      "name": "Nintendo Switch 2",
+      "abbreviation": "Switch 2",
+      "manufacturer": "",
+      "generation": 9,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 509,
+    "fields": {
+      "igdb_id": 509,
+      "name": "Polymega",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": null,
+      "is_supported": false
+    }
+  },
+  {
+    "model": "games.platform",
+    "pk": 510,
+    "fields": {
+      "igdb_id": 510,
+      "name": "e-Reader / Card-e Reader",
+      "abbreviation": "",
+      "manufacturer": "",
+      "generation": 6,
+      "is_supported": false
+    }
+  }
+]
