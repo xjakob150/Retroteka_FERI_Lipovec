@@ -86,4 +86,4 @@ pytest tests check that:
 
 * "Avtentikacija in upravljanje uporabnikov" in [04 – Arhitektura in tehnološki sklad](../04-arhitektura-in-tehnoloski-sklad.md); US-01, US-02, US-23 and US-24 in [05 – User Stories](../05-uporabniske-zgodbe.md)
 * If the XSS risk becomes unacceptable, the refresh token can move to an `httpOnly` cookie. That change would be recorded in a new ADR that supersedes this one.
-* Related: [ADR-0001](0001-separate-react-spa-and-rest-api.md), [ADR-0010](0010-pbkdf2-sha256-password-hashing.md), [ADR-0011](0011-user-role-as-single-field.md).
+* Related: [ADR-0001](0001-separate-react-spa-and-rest-api.md), [ADR-0010](0010-pbkdf2-sha256-password-hashing.md), [ADR-0011](0011-user-role-as-single-field.md), [ADR-0016](0016-logout-and-session-restore-endpoints.md).
