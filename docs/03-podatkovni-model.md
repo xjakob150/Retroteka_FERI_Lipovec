@@ -10,7 +10,7 @@ Baza je relacijska (PostgreSQL) in hrani vnose uporabnikov ter toliko podatkov o
 | **Platform** – šifrant podprtih platform | `igdb_id` (unikaten), `name`, `abbreviation`, `manufacturer`, `generation`, `is_supported` |
 | **Game** – predpomnjena igra iz IGDB | `igdb_id` (unikaten), `title`, `cover_url`, `release_year`, `genres`, `summary`, `synced_at` |
 | **GameRelease** – izid igre na platformi | `game_id`, `platform_id`, `release_year` |
-| **Collection** – poimenovana zbirka uporabnika | `user_id`, `name`, `description`, `is_public`, `is_hidden`, `hidden_by_id`, `hidden_at` |
+| **Collection** – poimenovana zbirka uporabnika | `user_id`, `name`, `description`, `is_public`, `is_hidden`, `hidden_by_id`, `hidden_at`, `created_at` |
 | **CollectionItem** – izvod igre v zbirki | `collection_id`, `game_id`, `platform_id`, `region`, `condition`, `purchase_price`, `notes`, `estimated_price`, `price_checked_at`, `created_at` |
 | **PriceCheck** – en pregled cene izvoda | `item_id`, `checked_at`, `price`, `currency`, `listing_count`, `source` |
 | **WishlistItem** – igra, ki jo uporabnik še išče | `user_id`, `game_id`, `platform_id`, `region`, `condition`, `notes`, `created_at` |
@@ -41,7 +41,7 @@ Baza je relacijska (PostgreSQL) in hrani vnose uporabnikov ter toliko podatkov o
 
 | Omejitev | Zahteva |
 |---|---|
-| `Collection` unikaten `(user_id, name)` | Uporabnik ne more imeti dveh zbirk z istim imenom. |
+| `Collection` unikaten `(user_id, LOWER(name))` | Uporabnik ne more imeti dveh zbirk z istim imenom, velike in male črke se ne razlikujejo. |
 | `GameRelease` unikaten `(game_id, platform_id)` | Izid igre na isti platformi se ne podvaja. |
 | `WishlistItem` unikaten `(user_id, game_id, platform_id)` | Ista igra za isto platformo je na seznamu želja le enkrat. |
 | `CollectionItem` brez unikatnosti | Isto igro je mogoče dodati večkrat, vsak zapis je svoj izvod. |
