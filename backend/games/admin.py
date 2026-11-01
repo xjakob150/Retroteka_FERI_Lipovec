@@ -1,3 +1,9 @@
 from django.contrib import admin
 
-# Register your models here.
+from config.admin_utils import ReadOnlyAdmin
+
+from .models import Game, GameRelease, Platform
+
+admin.site.register(Platform, ReadOnlyAdmin)
+admin.site.register(Game, ReadOnlyAdmin)
+admin.site.register(GameRelease, ReadOnlyAdmin)
