@@ -1,6 +1,8 @@
 from rest_framework.permissions import BasePermission
 
-MODERATION_ROLES = ('moderator', 'admin')
+from users.models import User
+
+MODERATION_ROLES = (User.Role.MODERATOR, User.Role.ADMIN)
 
 
 class IsCollectionOwner(BasePermission):

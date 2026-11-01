@@ -14,7 +14,9 @@ pytestmark = pytest.mark.django_db
 
 
 def make_user(username='jakob'):
-    return get_user_model().objects.create_user(username=username, password='geslo-za-test')
+    return get_user_model().objects.create_user(
+        username=username, email=f'{username}@example.com', password='geslo-za-test',
+    )
 
 
 def test_new_collection_is_private_and_not_hidden():

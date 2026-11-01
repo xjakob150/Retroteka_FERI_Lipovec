@@ -15,10 +15,9 @@ ALL_PERMISSIONS = [IsCollectionOwner, IsItemOwner, CanHideCollection, CanUnhideC
 
 
 def make_user(username, role='collector'):
-    user = get_user_model().objects.create_user(username=username, password='geslo-za-test')
-    # Do #9 uporabniski model nima polja role, zato ga testi nastavijo rocno.
-    user.role = role
-    return user
+    return get_user_model().objects.create_user(
+        username=username, email=f'{username}@example.com', password='geslo-za-test', role=role,
+    )
 
 
 def allowed(permission_class, user, obj=None):

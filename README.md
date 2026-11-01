@@ -42,8 +42,6 @@ docker compose exec backend python manage.py loaddata platforms
 
 Frontend teče na http://localhost:5173, API na http://localhost:8000/api/.
 
-> **Začasno:** ko bo dodan uporabniški model (#9), lokalne baze, ki je bila pripravljena pred tem, ne bo več mogoče posodobiti. Ponastavite jo z `docker compose down -v`, kar izbriše vse lokalne podatke, in znova poženite zgornja ukaza.
-
 ### Ključi za zunanje storitve
 
 Aplikacija se zažene tudi brez ključev, vendar brez njih nekatere funkcije ne delujejo. Ključe vpišite v `.env`, ki se ne shrani v repozitorij.

@@ -41,6 +41,7 @@ Baza je relacijska (PostgreSQL) in hrani vnose uporabnikov ter toliko podatkov o
 
 | Omejitev | Zahteva |
 |---|---|
+| `User` unikaten `LOWER(username)` in `LOWER(email)` | Uporabniško ime in e-pošta se ne podvajata, velike in male črke se ne razlikujejo. E-pošta je obvezna. |
 | `Collection` unikaten `(user_id, LOWER(name))` | Uporabnik ne more imeti dveh zbirk z istim imenom, velike in male črke se ne razlikujejo. |
 | `GameRelease` unikaten `(game_id, platform_id)` | Izid igre na isti platformi se ne podvaja. |
 | `WishlistItem` unikaten `(user_id, game_id, platform_id)` | Ista igra za isto platformo je na seznamu želja le enkrat. |
