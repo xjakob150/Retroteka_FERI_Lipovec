@@ -1,6 +1,11 @@
 from django.contrib import admin
+from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, OutstandingToken
 
 from .models import User
+
+# Stran z izdanimi žetoni bi glavnemu skrbniku pokazala veljavne refresh žetone drugih uporabnikov.
+admin.site.unregister(OutstandingToken)
+admin.site.unregister(BlacklistedToken)
 
 
 @admin.register(User)
