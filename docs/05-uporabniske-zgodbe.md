@@ -83,6 +83,7 @@
    - **Given** the external game database does not respond,
    - **When** the user searches for a game that has been found before,
    - **Then** the saved result is shown with the notice "Showing saved data".
+6. Results include only games sold as a standalone product (main games, remakes, remasters, expanded editions, ports and standalone expansions); DLC, bundles, episodes, updates and mods are left out.
 
 ### US-04 – Filter search results by platform
 

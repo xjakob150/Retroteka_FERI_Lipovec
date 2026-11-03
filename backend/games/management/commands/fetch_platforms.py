@@ -1,10 +1,9 @@
 import json
-import os
-import urllib.parse
-import urllib.request
 from pathlib import Path
 
 from django.core.management.base import BaseCommand, CommandError
+
+from games.igdb import IGDBError, get_client
 
 FIXTURE = Path(__file__).resolve().parents[2] / 'fixtures' / 'platforms.json'
 
@@ -48,25 +47,10 @@ SUPPORTED = {
 
 
 def fetch_all_platforms():
-    client_id = os.environ['IGDB_CLIENT_ID']
-    data = urllib.parse.urlencode({
-        'client_id': client_id,
-        'client_secret': os.environ['IGDB_CLIENT_SECRET'],
-        'grant_type': 'client_credentials',
-    }).encode()
-    with urllib.request.urlopen('https://id.twitch.tv/oauth2/token', data, timeout=15) as response:
-        token = json.load(response)['access_token']
-
     platforms = []
     while True:
         query = f'fields id,name,abbreviation,generation; limit 500; offset {len(platforms)}; sort id asc;'
-        request = urllib.request.Request(
-            'https://api.igdb.com/v4/platforms',
-            data=query.encode(),
-            headers={'Client-ID': client_id, 'Authorization': f'Bearer {token}'},
-        )
-        with urllib.request.urlopen(request, timeout=15) as response:
-            page = json.load(response)
+        page = get_client().post('platforms', query).json()
         platforms += page
         if len(page) < 500:
             return platforms
@@ -93,7 +77,10 @@ class Command(BaseCommand):
     help = 'Read platforms from IGDB and write the platforms fixture.'
 
     def handle(self, *args, **options):
-        platforms = fetch_all_platforms()
+        try:
+            platforms = fetch_all_platforms()
+        except IGDBError as error:
+            raise CommandError(str(error)) from error
         missing = SUPPORTED.keys() - {platform['id'] for platform in platforms}
         if missing:
             raise CommandError(f'Supported platforms missing from IGDB: {sorted(missing)}')
