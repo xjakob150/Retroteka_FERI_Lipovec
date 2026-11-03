@@ -75,7 +75,7 @@
 
 **Acceptance criteria:**
 
-1. Search starts once at least 3 characters are entered; with fewer, the hint "Type at least 3 characters" is shown.
+1. Search starts when the user presses Enter or clicks "Search", and only with at least 3 characters entered; with fewer, the hint "Type at least 3 characters" is shown.
 2. Each result shows the cover, title, release year, genre and platforms. Only platforms up to and including the 7th generation are shown; games released only on newer platforms are left out.
 3. A page shows at most 20 results, with "Prev" and "Next" buttons and a counter such as "1–20 of 34".
 4. If nothing is found, the system shows "No games found" and suggests checking the spelling.
@@ -96,8 +96,7 @@
 1. The platform list contains only supported platforms (e.g. NES, SNES, Nintendo 64, PS1, PS2, PS3, Xbox 360, Wii).
 2. With a platform selected, only games released on that platform are shown.
 3. The selected platform stays selected when moving to the next page of results.
-4. Reloading the page or opening a copied link shows the same search text and platform.
-5. Choosing "Platform: All" removes the filter.
+4. Choosing "Platform: All" removes the filter.
 
 ---
 

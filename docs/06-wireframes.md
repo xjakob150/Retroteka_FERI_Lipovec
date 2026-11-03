@@ -44,8 +44,8 @@ The entry page for guests, with the login form on the left and registration on t
 
 The search page a collector uses to find games and check whether they already own them.
 
-1. **Search field** – search starts after 3 characters; results are limited to retro platforms (US-03).
-2. **Platform filter** – lists only supported platforms; the choice is kept between result pages and after reloading (US-04).
+1. **Search field** – search starts with Enter or the "Search" button, once at least 3 characters are entered; results are limited to retro platforms (US-03). The button is not drawn in the wireframe.
+2. **Platform filter** – lists only supported platforms; the choice is kept between result pages (US-04).
 3. **Result** – cover, title, release year, genre and platform (US-03).
 4. **"In collection" badge** – shows the platform and collection where the user already owns the game, so they don't buy a duplicate (US-10).
 5. **"On wishlist" badge** – the game is on the user's wishlist (US-18).
