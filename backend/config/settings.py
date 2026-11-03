@@ -102,6 +102,10 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+    # Iskanje kliče IGDB, ki dovoli 4 zahteve na sekundo za celo aplikacijo (ADR-0008).
+    'DEFAULT_THROTTLE_RATES': {
+        'search': '120/min',
+    },
 }
 
 SIMPLE_JWT = {
