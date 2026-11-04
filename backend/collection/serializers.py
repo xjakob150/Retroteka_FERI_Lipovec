@@ -6,6 +6,7 @@ from games.models import Game, Platform
 from .models import Collection, CollectionItem
 
 DUPLICATE_NAME = 'You already have a collection with this name'
+HIDDEN_CANNOT_BE_PUBLIC = 'A collection hidden by a moderator cannot be made public.'
 
 
 class CollectionSerializer(serializers.ModelSerializer):
@@ -22,12 +23,26 @@ class CollectionSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(DUPLICATE_NAME)
         return value
 
+    def validate_is_public(self, value):
+        # Skrito zbirko lahko znova objavi samo moderator (US-12); ista vrednost ali umik v zasebno je dovoljen.
+        collection = self.instance
+        if collection is not None and collection.is_hidden and value and not collection.is_public:
+            raise serializers.ValidationError(HIDDEN_CANNOT_BE_PUBLIC)
+        return value
+
     def create(self, validated_data):
         try:
             with transaction.atomic():
                 return Collection.objects.create(user=self.context['request'].user, **validated_data)
         except IntegrityError:
             # Sočasna zahteva z istim imenom je prešla preverjanje, omejitev v bazi pa jo je zavrnila.
+            raise serializers.ValidationError({'name': [DUPLICATE_NAME]})
+
+    def update(self, instance, validated_data):
+        try:
+            with transaction.atomic():
+                return super().update(instance, validated_data)
+        except IntegrityError:
             raise serializers.ValidationError({'name': [DUPLICATE_NAME]})
 
 

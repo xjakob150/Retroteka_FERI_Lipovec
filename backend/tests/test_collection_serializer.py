@@ -4,6 +4,8 @@ from unittest.mock import patch
 import pytest
 from django.contrib.auth import get_user_model
 
+from django.utils import timezone
+
 from collection.models import Collection
 from collection.serializers import CollectionSerializer
 
@@ -92,3 +94,93 @@ def test_read_only_fields_are_ignored():
     assert collection.is_hidden is False
     assert collection.id != 999
     assert collection.user == user
+
+
+def editing(collection, **data):
+    return CollectionSerializer(
+        collection, data=data, partial=True, context={'request': SimpleNamespace(user=collection.user)},
+    )
+
+
+def test_owner_can_change_name_description_and_visibility():
+    collection = Collection.objects.create(user=make_user(), name='PS2')
+    form = editing(collection, name='PlayStation 2', description='Opis', is_public=True)
+    assert form.is_valid(), form.errors
+    form.save()
+    collection.refresh_from_db()
+    assert (collection.name, collection.description, collection.is_public) == ('PlayStation 2', 'Opis', True)
+
+
+def test_renaming_only_the_case_of_own_name_is_allowed():
+    collection = Collection.objects.create(user=make_user(), name='PS2')
+    assert editing(collection, name='Ps2').is_valid()
+
+
+def test_renaming_to_another_own_collection_name_is_rejected():
+    user = make_user()
+    Collection.objects.create(user=user, name='PS1')
+    collection = Collection.objects.create(user=user, name='PS2')
+    form = editing(collection, name='ps1')
+    assert not form.is_valid()
+    assert form.errors == {'name': ['You already have a collection with this name']}
+
+
+def test_edit_uses_the_same_rules_as_creation():
+    collection = Collection.objects.create(user=make_user(), name='PS2')
+    form = editing(collection, name='')
+    assert not form.is_valid()
+    assert 'name' in form.errors
+    form = editing(collection, description='x' * 501)
+    assert not form.is_valid()
+    assert 'description' in form.errors
+
+
+def test_concurrent_rename_rejected_by_database_gives_same_message():
+    user = make_user()
+    Collection.objects.create(user=user, name='PS1')
+    collection = Collection.objects.create(user=user, name='PS2')
+    form = editing(collection, name='ps1')
+    with patch.object(CollectionSerializer, 'validate_name', lambda self, value: value):
+        assert form.is_valid()
+        with pytest.raises(Exception) as error:
+            form.save()
+    assert error.value.detail == {'name': ['You already have a collection with this name']}
+
+
+def hidden(is_public):
+    return Collection.objects.create(
+        user=make_user(), name='Junk box', is_public=is_public, is_hidden=True, hidden_at=timezone.now(),
+    )
+
+
+def test_hidden_private_collection_cannot_be_made_public():
+    form = editing(hidden(is_public=False), is_public=True)
+    assert not form.is_valid()
+    assert form.errors == {'is_public': ['A collection hidden by a moderator cannot be made public.']}
+
+
+def test_hidden_collection_can_be_renamed_with_unchanged_visibility():
+    collection = hidden(is_public=True)
+    form = editing(collection, name='Rezervni deli', is_public=True)
+    assert form.is_valid(), form.errors
+    form.save()
+    collection.refresh_from_db()
+    assert (collection.name, collection.is_public, collection.is_hidden) == ('Rezervni deli', True, True)
+
+
+def test_hidden_collection_can_be_made_private():
+    collection = hidden(is_public=True)
+    form = editing(collection, is_public=False)
+    assert form.is_valid()
+    form.save()
+    collection.refresh_from_db()
+    assert (collection.is_public, collection.is_hidden) == (False, True)
+
+
+def test_owner_cannot_unhide_through_edit():
+    collection = hidden(is_public=True)
+    form = editing(collection, is_hidden=False)
+    assert form.is_valid()
+    form.save()
+    collection.refresh_from_db()
+    assert collection.is_hidden is True

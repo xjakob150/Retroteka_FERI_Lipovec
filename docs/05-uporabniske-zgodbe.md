@@ -224,7 +224,7 @@
    - **Given** a public collection has an offensive name,
    - **When** the moderator clicks "Hide collection",
    - **Then** the collection disappears from the list of public collections, and others get "Collection not found" through a direct link.
-3. Hiding deletes nothing: the owner still sees the collection under "My collections" with the label "Hidden by moderator" and cannot make it public again.
+3. Hiding deletes nothing: the owner still sees the collection under "My collections" with the label "Hidden by moderator" and cannot make it public again; an attempt shows "A collection hidden by a moderator cannot be made public."
 4. The moderator can make a hidden collection visible again.
 5. The moderator cannot edit or delete another user's collection or its items.
 6. A moderator or administrator can hide their own collection, but cannot make it visible again; another moderator or administrator must do it.
