@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import client from '../api/client'
 import GameResult from '../components/GameResult'
+import PlatformSelect from '../components/PlatformSelect'
 
 const MIN_LENGTH = 3
 // Enako kot PAGE_SIZE v backend/games/search.py.
@@ -10,20 +11,25 @@ const GENERIC_ERROR = 'Something went wrong. Please try again.'
 
 export default function SearchPage() {
   const [text, setText] = useState('')
+  const [platform, setPlatform] = useState({ id: '', label: '' })
   const [tooShort, setTooShort] = useState(false)
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const latestRequest = useRef(0)
 
-  async function runSearch(query, page) {
+  async function runSearch(query, searchPlatform, page) {
     const request = ++latestRequest.current
     setLoading(true)
     setError('')
     try {
-      const response = await client.get('/games/search/', { params: { q: query, page } })
+      const params = { q: query, page }
+      if (searchPlatform.id) {
+        params.platform = searchPlatform.id
+      }
+      const response = await client.get('/games/search/', { params })
       if (request === latestRequest.current) {
-        setResult({ query, ...response.data })
+        setResult({ query, platform: searchPlatform, ...response.data })
       }
     } catch (requestError) {
       if (request === latestRequest.current) {
@@ -38,7 +44,7 @@ export default function SearchPage() {
   }
 
   function goToPage(page) {
-    runSearch(result.query, page)
+    runSearch(result.query, result.platform, page)
     window.scrollTo(0, 0)
   }
 
@@ -50,14 +56,14 @@ export default function SearchPage() {
       return
     }
     setTooShort(false)
-    runSearch(query, 1)
+    runSearch(query, platform, 1)
   }
 
   return (
     <div>
       <h1 className="mb-5 text-3xl font-bold">Search games</h1>
 
-      <form onSubmit={handleSubmit} role="search" className="flex gap-3">
+      <form onSubmit={handleSubmit} role="search" className="flex flex-col gap-3 sm:flex-row">
         <input
           type="search"
           value={text}
@@ -67,6 +73,7 @@ export default function SearchPage() {
           placeholder="Search by title"
           className="min-w-0 flex-1 rounded-md border border-gray-400 bg-white px-3 py-2 focus:ring-2 focus:ring-gray-400 focus:outline-none"
         />
+        <PlatformSelect value={platform.id} onChange={(id, label) => setPlatform({ id, label })} />
         <button
           type="submit"
           disabled={loading}
@@ -97,7 +104,8 @@ export default function SearchPage() {
       {result && result.results.length > 0 && (
         <>
           <p className="mt-6 text-gray-500">
-            {result.count} {result.count === 1 ? 'result' : 'results'} for “{result.query}”
+            {result.count} {result.count === 1 ? 'result' : 'results'} for “{result.query}”{' '}
+            {result.platform.id ? `on ${result.platform.label}` : 'on all platforms'}
           </p>
           <ul>
             {result.results.map((game) => (

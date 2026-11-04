@@ -97,6 +97,7 @@
 2. With a platform selected, only games released on that platform are shown.
 3. The selected platform stays selected when moving to the next page of results.
 4. Choosing "Platform: All" removes the filter.
+5. A newly selected platform is applied with the next search (Enter or "Search"); until then the result counter names the platform of the results shown.
 
 ---
 
