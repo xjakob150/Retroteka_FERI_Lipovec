@@ -1,7 +1,9 @@
 from django.db import IntegrityError, transaction
 from rest_framework import serializers
 
-from .models import Collection
+from games.models import Game, Platform
+
+from .models import Collection, CollectionItem
 
 DUPLICATE_NAME = 'You already have a collection with this name'
 
@@ -27,3 +29,48 @@ class CollectionSerializer(serializers.ModelSerializer):
         except IntegrityError:
             # Sočasna zahteva z istim imenom je prešla preverjanje, omejitev v bazi pa jo je zavrnila.
             raise serializers.ValidationError({'name': [DUPLICATE_NAME]})
+
+
+class CollectionListSerializer(CollectionSerializer):
+    item_count = serializers.IntegerField(read_only=True)
+    covers = serializers.SerializerMethodField()
+
+    class Meta(CollectionSerializer.Meta):
+        fields = CollectionSerializer.Meta.fields + ['item_count', 'covers']
+
+    def get_covers(self, collection):
+        # Naslovnice prvih petih izvodov po naslovu; ista igra se lahko ponovi, ker je vsak izvod svoj zapis.
+        return [item.game.cover_url for item in collection.items_by_title[:5]]
+
+
+class ItemGameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Game
+        fields = ['id', 'title', 'cover_url']
+
+
+class ItemPlatformSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Platform
+        fields = ['id', 'name', 'abbreviation']
+
+
+class CollectionItemSerializer(serializers.ModelSerializer):
+    game = ItemGameSerializer(read_only=True)
+    platform = ItemPlatformSerializer(read_only=True)
+    region_label = serializers.CharField(source='get_region_display', read_only=True)
+    condition_label = serializers.CharField(source='get_condition_display', read_only=True)
+
+    class Meta:
+        model = CollectionItem
+        fields = [
+            'id', 'game', 'platform', 'region', 'region_label', 'condition', 'condition_label', 'purchase_price',
+        ]
+
+
+class CollectionDetailSerializer(CollectionSerializer):
+    item_count = serializers.IntegerField(read_only=True)
+    items = CollectionItemSerializer(source='items_by_title', many=True, read_only=True)
+
+    class Meta(CollectionSerializer.Meta):
+        fields = CollectionSerializer.Meta.fields + ['item_count', 'items']
