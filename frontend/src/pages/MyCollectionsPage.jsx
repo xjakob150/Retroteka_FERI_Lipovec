@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import client from '../api/client'
+import CollectionCard from '../components/CollectionCard'
 import NewCollectionDialog from '../components/NewCollectionDialog'
 
 export default function MyCollectionsPage() {
@@ -57,27 +58,18 @@ export default function MyCollectionsPage() {
       {collections?.length === 0 && <p className="text-gray-500">You have no collections yet.</p>}
 
       {collections?.length > 0 && (
-        <ul className="divide-y divide-gray-200 rounded-lg border border-gray-300 bg-white">
+        <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {collections.map((collection) => (
-            <li key={collection.id} className="flex items-center justify-between gap-4 p-4">
-              <div className="min-w-0">
-                <h2 className="truncate text-lg font-semibold">{collection.name}</h2>
-                <p className="text-gray-500">
-                  {collection.item_count} {collection.item_count === 1 ? 'item' : 'items'}
-                </p>
-              </div>
-              <span className="shrink-0 rounded-full border border-gray-400 px-3 py-0.5 text-sm">
-                {collection.is_public ? 'Public' : 'Private'}
-              </span>
-            </li>
+            <CollectionCard key={collection.id} collection={collection} />
           ))}
           <li>
             <button
               type="button"
               onClick={() => setCreating(true)}
-              className="w-full p-4 text-left text-gray-600 hover:bg-gray-50"
+              className="flex h-full min-h-40 w-full flex-col items-center justify-center rounded-lg border border-dashed border-gray-400 text-gray-600 hover:bg-white"
             >
-              + New collection
+              <span className="text-3xl">+</span>
+              <span className="text-lg">New collection</span>
             </button>
           </li>
         </ul>
