@@ -5,6 +5,7 @@ import Layout from './components/Layout'
 import ProtectedRoute from './components/ProtectedRoute'
 import { AuthProvider } from './context/AuthContext'
 import AuthPage from './pages/AuthPage'
+import CollectionPage from './pages/CollectionPage'
 import MyCollectionsPage from './pages/MyCollectionsPage'
 import NotFoundPage from './pages/NotFoundPage'
 import SearchPage from './pages/SearchPage'
@@ -21,6 +22,7 @@ createRoot(document.getElementById('root')).render(
             <Route path="/register" element={<AuthPage />} />
             <Route element={<ProtectedRoute />}>
               <Route path="/collections" element={<MyCollectionsPage />} />
+              <Route path="/collections/:id" element={<CollectionPage />} />
             </Route>
             <Route path="*" element={<NotFoundPage />} />
           </Route>
