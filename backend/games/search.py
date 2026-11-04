@@ -50,9 +50,12 @@ def save_games(igdb_games):
     return games
 
 
-def search_saved_games(query, limit=20, offset=0):
+def search_saved_games(query, limit=20, offset=0, platform=None):
     """Rezerva ob izpadu IGDB: vrne (igre, skupno število) iz shranjenih iger."""
-    games = Game.objects.filter(releases__platform__is_supported=True)
+    if platform is None:
+        games = Game.objects.filter(releases__platform__is_supported=True)
+    else:
+        games = Game.objects.filter(releases__platform=platform)
     # Vsaka beseda mora biti v naslovu, vrstni red in velike črke niso pomembni.
     for word in query.split():
         games = games.filter(title__icontains=word)
@@ -60,16 +63,19 @@ def search_saved_games(query, limit=20, offset=0):
     return list(games[offset:offset + limit]), games.count()
 
 
-def search_games(query, page):
+def search_games(query, page, platform=None):
     """Vrne (igre, skupno število, ali so to shranjeni podatki) za eno stran iskanja."""
     offset = (page - 1) * PAGE_SIZE
-    supported = Platform.objects.filter(is_supported=True).values_list('igdb_id', flat=True)
+    if platform is None:
+        platform_ids = Platform.objects.filter(is_supported=True).values_list('igdb_id', flat=True)
+    else:
+        platform_ids = [platform.igdb_id]
     try:
-        igdb_games, total = get_client().search(query, supported, limit=PAGE_SIZE, offset=offset)
+        igdb_games, total = get_client().search(query, platform_ids, limit=PAGE_SIZE, offset=offset)
         games, saved_data = save_games(igdb_games), False
     except IGDBError as error:
         logger.warning('IGDB search failed, using saved games: %s', error)
-        (games, total), saved_data = search_saved_games(query, limit=PAGE_SIZE, offset=offset), True
+        (games, total), saved_data = search_saved_games(query, PAGE_SIZE, offset, platform), True
     return with_supported_releases(games), total, saved_data
 
 
