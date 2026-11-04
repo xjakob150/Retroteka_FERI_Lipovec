@@ -139,6 +139,43 @@ def test_too_long_query_is_rejected(igdb):
     assert get(q='x' * 101).status_code == 400
 
 
+def platform_id(igdb_id):
+    return Platform.objects.get(igdb_id=igdb_id).id
+
+
+def test_platform_filter_asks_igdb_for_that_platform_only(igdb):
+    fake = igdb(games=[igdb_game()])
+    response = get(q='gran turismo', platform=platform_id(PS2))
+    assert response.status_code == 200
+    assert fake.calls[0]['platform_ids'] == {PS2}
+
+
+def test_filtered_result_still_lists_all_supported_platforms(igdb):
+    igdb(games=[igdb_game(releases=((PS2, 2004), (PS1, 2003), (PS5, 2021)))])
+    platforms = get(q='gran turismo', platform=platform_id(PS2)).data['results'][0]['platforms']
+    assert [platform['abbreviation'] for platform in platforms] == ['PS1', 'PS2']
+
+
+def test_platform_filter_applies_to_saved_games(igdb):
+    save_games([igdb_game(1, 'Gran Turismo 2', releases=((PS1, 1999),)), igdb_game(2, 'Gran Turismo 4')])
+    igdb(error=IGDBError('timeout'))
+    response = get(q='gran turismo', platform=platform_id(PS1))
+    assert response.data['saved_data'] is True
+    assert [game['title'] for game in response.data['results']] == ['Gran Turismo 2', 'Gran Turismo 4']
+    response = get(q='gran turismo 2', platform=platform_id(PS2))
+    assert response.data['results'] == []
+
+
+@pytest.mark.parametrize('value', ['unsupported', 'missing', 'abc'])
+def test_unsupported_or_unknown_platform_is_rejected(igdb, value):
+    fake = igdb()
+    platform = {'unsupported': lambda: platform_id(PS5), 'missing': lambda: 99999, 'abc': lambda: 'abc'}[value]()
+    response = get(q='zelda', platform=platform)
+    assert response.status_code == 400
+    assert response.data['platform'] == ['Select a supported platform.']
+    assert fake.calls == []
+
+
 def search_until_throttled(client, limit=121):
     return [client.get(reverse('game-search'), {'q': 'zelda'}).status_code for _ in range(limit)]
 
