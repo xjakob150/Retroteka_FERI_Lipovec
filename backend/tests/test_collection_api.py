@@ -282,3 +282,89 @@ def test_detail_query_count_does_not_grow_with_items(ps2):
     for n in range(2, 8):
         add_item(collection, ps2, f'Igra {n}')
     assert queries() == one
+
+
+def patch(user, collection_id, **data):
+    return client_for(user).patch(detail_url(collection_id), data, format='json')
+
+
+def delete(user, collection_id):
+    return client_for(user).delete(detail_url(collection_id))
+
+
+def test_owner_edits_name_description_and_visibility():
+    collection = Collection.objects.create(user=make_user(), name='PS2')
+    response = patch(collection.user, collection.id, name='PlayStation 2', description='Opis', is_public=True)
+    assert response.status_code == 200
+    assert (response.data['name'], response.data['description'], response.data['is_public']) == (
+        'PlayStation 2', 'Opis', True,
+    )
+    collection.refresh_from_db()
+    assert (collection.name, collection.is_public) == ('PlayStation 2', True)
+
+
+def test_edit_with_one_field_keeps_the_others():
+    collection = Collection.objects.create(user=make_user(), name='PS2', description='Opis', is_public=True)
+    patch(collection.user, collection.id, name='PS2 igre')
+    collection.refresh_from_db()
+    assert (collection.name, collection.description, collection.is_public) == ('PS2 igre', 'Opis', True)
+
+
+def test_edit_rejects_duplicate_name():
+    user = make_user()
+    Collection.objects.create(user=user, name='PS1')
+    collection = Collection.objects.create(user=user, name='PS2')
+    response = patch(user, collection.id, name='ps1')
+    assert response.status_code == 400
+    assert response.data == {'name': ['You already have a collection with this name']}
+
+
+def test_owner_cannot_republish_hidden_collection():
+    collection = Collection.objects.create(
+        user=make_user(), name='Junk box', is_public=False, is_hidden=True, hidden_at=timezone.now(),
+    )
+    response = patch(collection.user, collection.id, is_public=True)
+    assert response.status_code == 400
+    assert response.data == {'is_public': ['A collection hidden by a moderator cannot be made public.']}
+    collection.refresh_from_db()
+    assert collection.is_public is False
+
+
+def test_put_is_not_allowed():
+    collection = Collection.objects.create(user=make_user(), name='PS2')
+    response = client_for(collection.user).put(detail_url(collection.id), {'name': 'X'}, format='json')
+    assert response.status_code == 405
+
+
+def test_owner_deletes_collection_with_its_items(ps2):
+    collection = Collection.objects.create(user=make_user(), name='PS2')
+    for title in ['Gran Turismo 4', 'Okami']:
+        add_item(collection, ps2, title)
+    assert delete(collection.user, collection.id).status_code == 204
+    assert not Collection.objects.filter(pk=collection.pk).exists()
+    assert not CollectionItem.objects.exists()
+    assert Game.objects.count() == 2
+
+
+def test_owner_can_delete_hidden_collection():
+    collection = Collection.objects.create(user=make_user(), name='Junk box', is_hidden=True, hidden_at=timezone.now())
+    assert delete(collection.user, collection.id).status_code == 204
+
+
+@pytest.mark.parametrize('role', [User.Role.COLLECTOR, User.Role.MODERATOR, User.Role.ADMIN])
+def test_other_users_cannot_edit_or_delete(ps2, role):
+    collection = Collection.objects.create(user=make_user('ana'), name='PS2', is_public=True)
+    add_item(collection, ps2, 'Okami')
+    other = make_user(role=role)
+    assert patch(other, collection.id, name='Ukradeno').status_code == 404
+    assert delete(other, collection.id).status_code == 404
+    collection.refresh_from_db()
+    assert collection.name == 'PS2'
+    assert collection.items.count() == 1
+
+
+def test_guest_cannot_edit_or_delete():
+    collection = Collection.objects.create(user=make_user(), name='PS2')
+    assert APIClient().patch(detail_url(collection.id), {'name': 'X'}, format='json').status_code == 401
+    assert APIClient().delete(detail_url(collection.id)).status_code == 401
+    assert Collection.objects.get(pk=collection.pk).name == 'PS2'
