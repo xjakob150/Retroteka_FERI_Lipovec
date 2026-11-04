@@ -1,13 +1,18 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router'
+import { Link, useNavigate, useParams } from 'react-router'
 import client from '../api/client'
 import { VisibilityLabel } from '../components/CollectionCard'
 import CollectionItems from '../components/CollectionItems'
+import DeleteCollectionDialog from '../components/DeleteCollectionDialog'
+import EditCollectionDialog from '../components/EditCollectionDialog'
 
 export default function CollectionPage() {
   const { id } = useParams()
   const [collection, setCollection] = useState(null)
   const [status, setStatus] = useState('loading')
+  const [editing, setEditing] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const navigate = useNavigate()
 
   const loadCollection = useCallback(async () => {
     setStatus('loading')
@@ -24,6 +29,12 @@ export default function CollectionPage() {
   useEffect(() => {
     loadCollection()
   }, [loadCollection])
+
+  function handleSaved(saved) {
+    // Odgovor vsebuje samo polja zbirke, izvodi in število ostanejo iz prejšnjega nalaganja.
+    setCollection({ ...collection, ...saved })
+    setEditing(false)
+  }
 
   if (status === 'loading') {
     return <p className="text-gray-500">Loading…</p>
@@ -68,12 +79,28 @@ export default function CollectionPage() {
           </div>
           {collection.description && <p className="mt-1 text-gray-600">{collection.description}</p>}
         </div>
-        <Link
-          to="/"
-          className="shrink-0 rounded-md bg-gray-800 px-4 py-2 font-medium whitespace-nowrap text-white hover:bg-gray-700"
-        >
-          + Add game
-        </Link>
+        <div className="flex shrink-0 flex-wrap gap-3">
+          <button
+            type="button"
+            onClick={() => setEditing(true)}
+            className="rounded-md border border-gray-300 bg-white px-4 py-2 font-medium hover:bg-gray-100"
+          >
+            Edit
+          </button>
+          <button
+            type="button"
+            onClick={() => setDeleting(true)}
+            className="rounded-md border border-dashed border-gray-400 bg-white px-4 py-2 font-medium hover:bg-gray-100"
+          >
+            Delete
+          </button>
+          <Link
+            to="/"
+            className="rounded-md bg-gray-800 px-4 py-2 font-medium whitespace-nowrap text-white hover:bg-gray-700"
+          >
+            + Add game
+          </Link>
+        </div>
       </div>
 
       {collection.items.length > 0 ? (
@@ -85,6 +112,18 @@ export default function CollectionPage() {
             Add game
           </Link>
         </div>
+      )}
+
+      {editing && (
+        <EditCollectionDialog collection={collection} onClose={() => setEditing(false)} onSaved={handleSaved} />
+      )}
+
+      {deleting && (
+        <DeleteCollectionDialog
+          collection={collection}
+          onClose={() => setDeleting(false)}
+          onDeleted={() => navigate('/collections', { replace: true })}
+        />
       )}
     </div>
   )
