@@ -3,7 +3,13 @@ from rest_framework import mixins, viewsets
 
 from .models import Collection, CollectionItem
 from .permissions import IsCollectionOwner, IsItemOwner
-from .serializers import CollectionDetailSerializer, CollectionListSerializer, CollectionSerializer, ItemSerializer
+from .serializers import (
+    CollectionDetailSerializer,
+    CollectionListSerializer,
+    CollectionSerializer,
+    ItemDetailSerializer,
+    ItemSerializer,
+)
 
 
 class CollectionViewSet(
@@ -36,10 +42,22 @@ class CollectionViewSet(
         return CollectionSerializer
 
 
-class ItemViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
-    serializer_class = ItemSerializer
+class ItemViewSet(
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    viewsets.GenericViewSet,
+):
     permission_classes = [IsItemOwner]
+    # Urejanje in premik sta delna (PATCH); PUT bi zahteval vsa polja.
+    http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
 
     def get_queryset(self):
-        # Samo izvodi v zbirkah prijavljenega uporabnika; tuj izvod bo za dejanja iz #28 404.
+        # Samo izvodi v zbirkah prijavljenega uporabnika, zato je tuj izvod 404.
         return CollectionItem.objects.filter(collection__user=self.request.user).select_related('game', 'platform')
+
+    def get_serializer_class(self):
+        if self.action in ('retrieve', 'partial_update'):
+            return ItemDetailSerializer
+        return ItemSerializer

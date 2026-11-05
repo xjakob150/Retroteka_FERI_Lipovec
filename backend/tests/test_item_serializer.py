@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 
 from collection.models import Collection, CollectionItem
-from collection.serializers import ItemSerializer
+from collection.serializers import ItemDetailSerializer, ItemSerializer
 from games.models import Game, GameRelease, Platform
 
 pytestmark = pytest.mark.django_db
@@ -121,3 +121,90 @@ def test_estimated_price_cannot_be_set(owner, data):
     assert form.is_valid()
     item = form.save()
     assert (item.estimated_price, item.price_checked_at) == (None, None)
+
+
+@pytest.fixture
+def item(owner, data):
+    form = serializer(owner, data)
+    assert form.is_valid()
+    return form.save()
+
+
+def editing(owner, item, payload):
+    return ItemSerializer(item, data=payload, partial=True, context={'request': SimpleNamespace(user=owner)})
+
+
+def test_owner_edits_copy_details(owner, item):
+    form = editing(owner, item, {'region': 'ntsc_j', 'condition': 'loose', 'purchase_price': '5.00', 'notes': 'Brez škatle'})
+    assert form.is_valid(), form.errors
+    form.save()
+    item.refresh_from_db()
+    assert (item.region, item.condition, f'{item.purchase_price}', item.notes) == ('ntsc_j', 'loose', '5.00', 'Brez škatle')
+
+
+def test_edit_can_clear_purchase_price(owner, item):
+    form = editing(owner, item, {'purchase_price': None})
+    assert form.is_valid()
+    form.save()
+    item.refresh_from_db()
+    assert item.purchase_price is None
+
+
+def test_platform_change_needs_release_of_the_same_game(owner, item):
+    n64 = Platform.objects.create(igdb_id=4, name='Nintendo 64', abbreviation='N64', is_supported=True)
+    form = editing(owner, item, {'platform': n64.id})
+    assert not form.is_valid()
+    assert form.errors == {'platform': ['Select a platform the game was released on.']}
+    GameRelease.objects.create(game=item.game, platform=n64)
+    assert editing(owner, item, {'platform': n64.id}).is_valid()
+
+
+def test_game_cannot_be_changed(owner, item):
+    other_game = Game.objects.create(igdb_id=1600, title='Gran Turismo 3', synced_at=timezone.now())
+    GameRelease.objects.create(game=other_game, platform=item.platform)
+    form = editing(owner, item, {'game': other_game.id})
+    assert form.is_valid()
+    form.save()
+    item.refresh_from_db()
+    assert item.game.title == 'Gran Turismo 4'
+
+
+def test_item_moves_to_another_own_collection(owner, item):
+    for_sale = Collection.objects.create(user=owner, name='For sale')
+    form = editing(owner, item, {'collection': for_sale.id})
+    assert form.is_valid()
+    form.save()
+    item.refresh_from_db()
+    assert item.collection == for_sale
+
+
+def test_item_cannot_move_to_other_users_collection(owner, item):
+    foreign = Collection.objects.create(
+        user=get_user_model().objects.create_user('ana', 'ana@example.com', 'dolgo-geslo-1'), name='Tuja',
+    )
+    form = editing(owner, item, {'collection': foreign.id})
+    assert not form.is_valid()
+    assert form.errors == {'collection': ['Select one of your collections.']}
+
+
+def test_edit_keeps_required_rules(owner, item):
+    form = editing(owner, item, {'region': ''})
+    assert not form.is_valid()
+    assert form.errors == {'region': ['Region is required']}
+
+
+def test_detail_includes_game_description_and_platforms(owner, item):
+    wii = Platform.objects.create(igdb_id=5, name='Wii', abbreviation='Wii', generation=7, is_supported=True)
+    ps5 = Platform.objects.create(igdb_id=167, name='PlayStation 5', is_supported=False)
+    GameRelease.objects.create(game=item.game, platform=wii, release_year=2008)
+    GameRelease.objects.create(game=item.game, platform=ps5)
+    item.game.genres, item.game.summary, item.game.release_year = ['Racing'], 'Dirkalna igra.', 2004
+    item.game.save()
+    Platform.objects.filter(igdb_id=8).update(generation=6)
+    game = ItemDetailSerializer(item).data['game']
+    assert (game['title'], game['genres'], game['summary'], game['release_year']) == (
+        'Gran Turismo 4', ['Racing'], 'Dirkalna igra.', 2004,
+    )
+    assert [(platform['abbreviation'], platform['release_year']) for platform in game['platforms']] == [
+        ('PS2', 2004), ('Wii', 2008),
+    ]

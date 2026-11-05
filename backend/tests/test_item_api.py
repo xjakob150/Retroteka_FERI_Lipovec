@@ -116,3 +116,95 @@ def test_adding_item_never_calls_igdb(owner, payload, monkeypatch):
 
 def test_listing_items_is_not_available(owner):
     assert client_for(owner).get(URL).status_code == 405
+
+
+@pytest.fixture
+def item(owner, payload):
+    return CollectionItem.objects.get(pk=add(owner, payload).data['id'])
+
+
+def detail_url(item_id):
+    return f'{URL}{item_id}/'
+
+
+def test_detail_url_name():
+    assert reverse('item-detail', args=[3]) == detail_url(3)
+
+
+def test_owner_opens_item_with_game_details(owner, item):
+    item.game.genres, item.game.summary, item.game.release_year = ['Racing'], 'Dirkalna igra.', 2004
+    item.game.save()
+    response = client_for(owner).get(detail_url(item.id))
+    assert response.status_code == 200
+    assert response.data['game'] == {
+        'id': item.game.id, 'title': 'Gran Turismo 4', 'cover_url': 'https://images.igdb.com/gt4.jpg',
+        'release_year': 2004, 'genres': ['Racing'], 'summary': 'Dirkalna igra.',
+        'platforms': [{'id': item.platform.id, 'name': 'PlayStation 2', 'abbreviation': 'PS2', 'release_year': 2004}],
+    }
+    assert (response.data['notes'], response.data['purchase_price']) == ('Sejem v Ljubljani', '12.50')
+
+
+def test_owner_edits_item(owner, item):
+    response = client_for(owner).patch(detail_url(item.id), {'condition': 'new', 'notes': ''}, format='json')
+    assert response.status_code == 200
+    assert (response.data['condition'], response.data['condition_label'], response.data['notes']) == (
+        'new', 'New / sealed', '',
+    )
+    assert 'platforms' in response.data['game']
+
+
+def test_owner_moves_item(owner, item):
+    for_sale = Collection.objects.create(user=owner, name='For sale')
+    response = client_for(owner).patch(detail_url(item.id), {'collection': for_sale.id}, format='json')
+    assert response.status_code == 200
+    assert response.data['collection'] == for_sale.id
+    data = client_for(owner).get(f'/api/collections/{for_sale.id}/').data
+    assert [entry['id'] for entry in data['items']] == [item.id]
+
+
+def test_invalid_edit_is_rejected_and_nothing_changes(owner, item):
+    response = client_for(owner).patch(detail_url(item.id), {'purchase_price': '-1'}, format='json')
+    assert response.status_code == 400
+    item.refresh_from_db()
+    assert f'{item.purchase_price}' == '12.50'
+
+
+def test_owner_removes_item(owner, item):
+    collection_id = item.collection_id
+    assert client_for(owner).delete(detail_url(item.id)).status_code == 204
+    assert not CollectionItem.objects.exists()
+    assert Collection.objects.filter(pk=collection_id).exists()
+    assert Game.objects.exists()
+
+
+def test_put_is_not_allowed(owner, item):
+    assert client_for(owner).put(detail_url(item.id), {'region': 'pal'}, format='json').status_code == 405
+
+
+@pytest.mark.parametrize('role', [User.Role.COLLECTOR, User.Role.MODERATOR, User.Role.ADMIN])
+def test_other_users_cannot_open_edit_move_or_remove(item, role):
+    other = User.objects.create_user('ana', 'ana@example.com', 'dolgo-geslo-1', role=role)
+    own = Collection.objects.create(user=other, name='Moja')
+    client = client_for(other)
+    assert client.get(detail_url(item.id)).status_code == 404
+    assert client.patch(detail_url(item.id), {'notes': 'Ukradeno'}, format='json').status_code == 404
+    assert client.patch(detail_url(item.id), {'collection': own.id}, format='json').status_code == 404
+    assert client.delete(detail_url(item.id)).status_code == 404
+    item.refresh_from_db()
+    assert (item.notes, item.collection.user.username) == ('Sejem v Ljubljani', 'marko')
+
+
+def test_guest_cannot_open_or_change_item(item):
+    assert APIClient().get(detail_url(item.id)).status_code == 401
+    assert APIClient().delete(detail_url(item.id)).status_code == 401
+    assert CollectionItem.objects.filter(pk=item.pk).exists()
+
+
+def test_item_endpoints_never_call_igdb(owner, item, monkeypatch):
+    def fail():
+        raise AssertionError('Item endpoints must never call IGDB')
+    monkeypatch.setattr(search, 'get_client', fail)
+    client = client_for(owner)
+    assert client.get(detail_url(item.id)).status_code == 200
+    assert client.patch(detail_url(item.id), {'notes': 'x'}, format='json').status_code == 200
+    assert client.delete(detail_url(item.id)).status_code == 204

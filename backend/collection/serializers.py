@@ -127,6 +127,12 @@ class ItemSerializer(serializers.ModelSerializer):
             'notes': {'max_length': 1000},
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Igre obstoječega izvoda ni mogoče zamenjati (US-09); napačna igra se popravi z novim izvodom.
+        if self.instance is not None:
+            self.fields['game'].read_only = True
+
     def validate_collection(self, collection):
         # Tuja zbirka dobi isto sporočilo kot neobstoječa, da se ne izve, da obstaja.
         if collection.user_id != self.context['request'].user.id:
@@ -158,5 +164,31 @@ class ItemSerializer(serializers.ModelSerializer):
             'estimated_price': None if item.estimated_price is None else str(item.estimated_price),
             'price_checked_at': item.price_checked_at,
             'created_at': item.created_at,
+        })
+        return data
+
+
+class ItemDetailSerializer(ItemSerializer):
+    """Izvod z vsem, kar prikaže stran izvoda: opis igre in platforme, na katerih je izšla."""
+
+    def to_representation(self, item):
+        data = super().to_representation(item)
+        game = item.game
+        releases = game.releases.filter(platform__is_supported=True).select_related('platform').order_by(
+            'platform__generation', 'platform__name',
+        )
+        data['game'].update({
+            'release_year': game.release_year,
+            'genres': game.genres,
+            'summary': game.summary,
+            'platforms': [
+                {
+                    'id': release.platform.id,
+                    'name': release.platform.name,
+                    'abbreviation': release.platform.abbreviation,
+                    'release_year': release.release_year,
+                }
+                for release in releases
+            ],
         })
         return data
