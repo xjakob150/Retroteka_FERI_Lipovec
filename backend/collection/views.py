@@ -2,8 +2,8 @@ from django.db.models import Count, Prefetch
 from rest_framework import mixins, viewsets
 
 from .models import Collection, CollectionItem
-from .permissions import IsCollectionOwner
-from .serializers import CollectionDetailSerializer, CollectionListSerializer, CollectionSerializer
+from .permissions import IsCollectionOwner, IsItemOwner
+from .serializers import CollectionDetailSerializer, CollectionListSerializer, CollectionSerializer, ItemSerializer
 
 
 class CollectionViewSet(
@@ -34,3 +34,12 @@ class CollectionViewSet(
         if self.action == 'retrieve':
             return CollectionDetailSerializer
         return CollectionSerializer
+
+
+class ItemViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+    serializer_class = ItemSerializer
+    permission_classes = [IsItemOwner]
+
+    def get_queryset(self):
+        # Samo izvodi v zbirkah prijavljenega uporabnika; tuj izvod bo za dejanja iz #28 404.
+        return CollectionItem.objects.filter(collection__user=self.request.user).select_related('game', 'platform')

@@ -1,12 +1,20 @@
 from django.db import IntegrityError, transaction
 from rest_framework import serializers
 
-from games.models import Game, Platform
+from games.models import Game, GameRelease, Platform
 
 from .models import Collection, CollectionItem
 
 DUPLICATE_NAME = 'You already have a collection with this name'
 HIDDEN_CANNOT_BE_PUBLIC = 'A collection hidden by a moderator cannot be made public.'
+NOT_OWN_COLLECTION = 'Select one of your collections.'
+NOT_RELEASED_ON_PLATFORM = 'Select a platform the game was released on.'
+UNKNOWN_GAME = 'Select a game from the search results.'
+
+
+def required(field):
+    message = f'{field} is required'
+    return {'required': message, 'null': message, 'blank': message}
 
 
 class CollectionSerializer(serializers.ModelSerializer):
@@ -89,3 +97,66 @@ class CollectionDetailSerializer(CollectionSerializer):
 
     class Meta(CollectionSerializer.Meta):
         fields = CollectionSerializer.Meta.fields + ['item_count', 'items']
+
+
+class ItemSerializer(serializers.ModelSerializer):
+    """Zapis izvoda; odgovor ima igro in platformo v enaki obliki kot seznam izvodov v zbirki."""
+
+    class Meta:
+        model = CollectionItem
+        fields = [
+            'id', 'collection', 'game', 'platform', 'region', 'condition', 'purchase_price', 'notes',
+            'estimated_price', 'price_checked_at', 'created_at',
+        ]
+        read_only_fields = ['id', 'estimated_price', 'price_checked_at', 'created_at']
+        extra_kwargs = {
+            'collection': {'error_messages': {
+                **required('Collection'), 'does_not_exist': NOT_OWN_COLLECTION, 'incorrect_type': NOT_OWN_COLLECTION,
+            }},
+            'game': {'error_messages': {
+                **required('Game'), 'does_not_exist': UNKNOWN_GAME, 'incorrect_type': UNKNOWN_GAME,
+            }},
+            'platform': {'error_messages': {
+                **required('Platform'),
+                'does_not_exist': NOT_RELEASED_ON_PLATFORM,
+                'incorrect_type': NOT_RELEASED_ON_PLATFORM,
+            }},
+            # Prazen niz pride do validate_<polje>, ki vrne sporočilo "... is required" namesto "not a valid choice".
+            'region': {'allow_blank': True, 'error_messages': required('Region')},
+            'condition': {'allow_blank': True, 'error_messages': required('Condition')},
+            'notes': {'max_length': 1000},
+        }
+
+    def validate_collection(self, collection):
+        # Tuja zbirka dobi isto sporočilo kot neobstoječa, da se ne izve, da obstaja.
+        if collection.user_id != self.context['request'].user.id:
+            raise serializers.ValidationError(NOT_OWN_COLLECTION)
+        return collection
+
+    def validate_region(self, value):
+        if not value:
+            raise serializers.ValidationError(required('Region')['required'])
+        return value
+
+    def validate_condition(self, value):
+        if not value:
+            raise serializers.ValidationError(required('Condition')['required'])
+        return value
+
+    def validate(self, attrs):
+        game = attrs.get('game', getattr(self.instance, 'game', None))
+        platform = attrs.get('platform', getattr(self.instance, 'platform', None))
+        if not GameRelease.objects.filter(game=game, platform=platform, platform__is_supported=True).exists():
+            raise serializers.ValidationError({'platform': [NOT_RELEASED_ON_PLATFORM]})
+        return attrs
+
+    def to_representation(self, item):
+        data = CollectionItemSerializer(item).data
+        data.update({
+            'collection': item.collection_id,
+            'notes': item.notes,
+            'estimated_price': None if item.estimated_price is None else str(item.estimated_price),
+            'price_checked_at': item.price_checked_at,
+            'created_at': item.created_at,
+        })
+        return data
