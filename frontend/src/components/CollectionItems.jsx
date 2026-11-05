@@ -1,6 +1,8 @@
+import { Link } from 'react-router'
+
 const price = new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR' })
 
-function purchasePrice(item) {
+export function purchasePrice(item) {
   return item.purchase_price === null ? '—' : price.format(item.purchase_price)
 }
 
@@ -39,7 +41,11 @@ export default function CollectionItems({ items }) {
               <td className="py-2 pr-4">
                 <Cover item={item} />
               </td>
-              <td className="py-2 pr-4 font-semibold">{item.game.title}</td>
+              <td className="py-2 pr-4 font-semibold">
+                <Link to={`/items/${item.id}`} className="hover:underline">
+                  {item.game.title}
+                </Link>
+              </td>
               <td className="py-2 pr-4">{platformName(item)}</td>
               <td className="py-2 pr-4">{item.region_label}</td>
               <td className="py-2 pr-4">{item.condition_label}</td>
@@ -54,7 +60,9 @@ export default function CollectionItems({ items }) {
           <li key={item.id} className="flex gap-3 border-b border-gray-200 py-3">
             <Cover item={item} />
             <div className="min-w-0">
-              <p className="font-semibold">{item.game.title}</p>
+              <Link to={`/items/${item.id}`} className="font-semibold hover:underline">
+                {item.game.title}
+              </Link>
               <p className="text-gray-500">
                 {[platformName(item), item.region_label, item.condition_label, purchasePrice(item)].join(' · ')}
               </p>
