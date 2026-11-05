@@ -1,4 +1,6 @@
-export default function GameResult({ game }) {
+import { Link } from 'react-router'
+
+export default function GameResult({ game, onAdd, addedTo }) {
   const details = [
     game.release_year,
     game.genres.join(', '),
@@ -17,10 +19,29 @@ export default function GameResult({ game }) {
       ) : (
         <div className="h-24 w-18 shrink-0 rounded border border-gray-300 bg-gray-200" />
       )}
-      <div className="min-w-0">
+      <div className="min-w-0 flex-1">
         <h2 className="text-lg font-semibold">{game.title}</h2>
         <p className="text-gray-500">{details.join(' · ')}</p>
+        {addedTo && (
+          <p role="status" className="mt-1 text-sm">
+            Added to{' '}
+            <Link to={`/collections/${addedTo.id}`} className="font-medium underline">
+              {addedTo.name}
+            </Link>
+          </p>
+        )}
       </div>
+      {onAdd && (
+        <div className="shrink-0 self-center">
+          <button
+            type="button"
+            onClick={() => onAdd(game)}
+            className="rounded-md bg-gray-800 px-3 py-2 font-medium whitespace-nowrap text-white hover:bg-gray-700"
+          >
+            + Add to collection
+          </button>
+        </div>
+      )}
     </li>
   )
 }

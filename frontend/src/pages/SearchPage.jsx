@@ -1,7 +1,9 @@
 import { useRef, useState } from 'react'
 import client from '../api/client'
+import AddToCollectionDialog from '../components/AddToCollectionDialog'
 import GameResult from '../components/GameResult'
 import PlatformSelect from '../components/PlatformSelect'
+import { useAuth } from '../context/AuthContext'
 
 const MIN_LENGTH = 3
 // Enako kot PAGE_SIZE v backend/games/search.py.
@@ -17,6 +19,9 @@ export default function SearchPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const latestRequest = useRef(0)
+  const { user } = useAuth()
+  const [addingGame, setAddingGame] = useState(null)
+  const [addedTo, setAddedTo] = useState({})
 
   async function runSearch(query, searchPlatform, page) {
     const request = ++latestRequest.current
@@ -109,7 +114,12 @@ export default function SearchPage() {
           </p>
           <ul>
             {result.results.map((game) => (
-              <GameResult key={game.id} game={game} />
+              <GameResult
+                key={game.id}
+                game={game}
+                onAdd={user ? setAddingGame : undefined}
+                addedTo={addedTo[game.id]}
+              />
             ))}
           </ul>
           <Pagination result={result} loading={loading} onPage={goToPage} />
@@ -121,6 +131,18 @@ export default function SearchPage() {
           <p className="text-lg font-semibold">No games found</p>
           <p className="text-gray-500">Check the spelling or try a shorter title.</p>
         </div>
+      )}
+
+      {addingGame && (
+        <AddToCollectionDialog
+          game={addingGame}
+          preferredPlatformId={result?.platform.id}
+          onClose={() => setAddingGame(null)}
+          onAdded={(collection) => {
+            setAddedTo({ ...addedTo, [addingGame.id]: collection })
+            setAddingGame(null)
+          }}
+        />
       )}
     </div>
   )
