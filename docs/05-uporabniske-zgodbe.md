@@ -163,6 +163,7 @@
 3. Collection, platform, region and condition are required; a missing field is marked, e.g. "Region is required".
 4. The purchase price is optional; if entered, it must be a number ≥ 0 with at most two decimal places (EUR).
 5. The same game can be added more than once, even to the same collection; each entry is a separate copy.
+6. Notes are optional, up to 1000 characters.
 
 ### US-09 – Manage an item
 
