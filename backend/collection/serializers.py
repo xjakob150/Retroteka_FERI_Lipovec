@@ -192,3 +192,35 @@ class ItemDetailSerializer(ItemSerializer):
             ],
         })
         return data
+
+
+class PublicItemSerializer(serializers.ModelSerializer):
+    """Izvod v javni zbirki: brez nakupne cene in opomb (US-11)."""
+
+    game = ItemGameSerializer(read_only=True)
+    platform = ItemPlatformSerializer(read_only=True)
+    region_label = serializers.CharField(source='get_region_display', read_only=True)
+    condition_label = serializers.CharField(source='get_condition_display', read_only=True)
+
+    class Meta:
+        model = CollectionItem
+        fields = ['id', 'game', 'platform', 'region', 'region_label', 'condition', 'condition_label']
+        read_only_fields = fields
+
+
+class PublicCollectionSerializer(serializers.ModelSerializer):
+    owner = serializers.CharField(source='user.username', read_only=True)
+    item_count = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model = Collection
+        fields = ['id', 'name', 'description', 'owner', 'item_count', 'is_hidden', 'created_at']
+        read_only_fields = fields
+
+
+class PublicCollectionDetailSerializer(PublicCollectionSerializer):
+    items = PublicItemSerializer(source='items_by_title', many=True, read_only=True)
+
+    class Meta(PublicCollectionSerializer.Meta):
+        fields = PublicCollectionSerializer.Meta.fields + ['items']
+        read_only_fields = fields
