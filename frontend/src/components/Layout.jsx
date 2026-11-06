@@ -17,7 +17,7 @@ export default function Layout() {
     <div className="min-h-screen bg-gray-50 text-gray-900">
       <header className="border-b border-gray-200 bg-white">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-3 gap-y-2 px-4 py-3">
-          <nav className="flex items-center gap-4 sm:gap-6">
+          <nav className="flex min-w-0 flex-wrap items-center gap-x-4 gap-y-1 sm:gap-x-6">
             <Link to="/" className="text-xl font-bold">
               Retroteka
             </Link>
@@ -29,6 +29,9 @@ export default function Layout() {
                 My collections
               </NavLink>
             )}
+            <NavLink to="/public" className={navLinkClass}>
+              Public collections
+            </NavLink>
           </nav>
           {user ? (
             <div className="ml-auto flex min-w-0 items-center gap-3">

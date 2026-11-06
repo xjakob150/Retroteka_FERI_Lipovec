@@ -9,6 +9,8 @@ import CollectionPage from './pages/CollectionPage'
 import ItemPage from './pages/ItemPage'
 import MyCollectionsPage from './pages/MyCollectionsPage'
 import NotFoundPage from './pages/NotFoundPage'
+import PublicCollectionPage from './pages/PublicCollectionPage'
+import PublicCollectionsPage from './pages/PublicCollectionsPage'
 import SearchPage from './pages/SearchPage'
 import './index.css'
 
@@ -21,6 +23,8 @@ createRoot(document.getElementById('root')).render(
             <Route path="/" element={<SearchPage />} />
             <Route path="/login" element={<AuthPage />} />
             <Route path="/register" element={<AuthPage />} />
+            <Route path="/public" element={<PublicCollectionsPage />} />
+            <Route path="/public/:id" element={<PublicCollectionPage />} />
             <Route element={<ProtectedRoute />}>
               <Route path="/collections" element={<MyCollectionsPage />} />
               <Route path="/collections/:id" element={<CollectionPage />} />
