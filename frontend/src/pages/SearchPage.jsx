@@ -2,12 +2,11 @@ import { useRef, useState } from 'react'
 import client from '../api/client'
 import AddToCollectionDialog from '../components/AddToCollectionDialog'
 import GameResult from '../components/GameResult'
+import Pagination from '../components/Pagination'
 import PlatformSelect from '../components/PlatformSelect'
 import { useAuth } from '../context/AuthContext'
 
 const MIN_LENGTH = 3
-// Enako kot PAGE_SIZE v backend/games/search.py.
-const PAGE_SIZE = 20
 const TOO_MANY_SEARCHES = 'Too many searches. Please wait a moment and try again.'
 const GENERIC_ERROR = 'Something went wrong. Please try again.'
 
@@ -122,7 +121,7 @@ export default function SearchPage() {
               />
             ))}
           </ul>
-          <Pagination result={result} loading={loading} onPage={goToPage} />
+          <Pagination result={result} loading={loading} onPage={goToPage} label="Search results pages" />
         </>
       )}
 
@@ -148,36 +147,3 @@ export default function SearchPage() {
   )
 }
 
-
-function Pagination({ result, loading, onPage }) {
-  const first = (result.page - 1) * PAGE_SIZE + 1
-  const last = first + result.results.length - 1
-  const buttonClass =
-    'rounded-md border border-gray-300 bg-white px-3 py-1.5 hover:bg-gray-100 disabled:opacity-40 disabled:hover:bg-white'
-
-  return (
-    <nav aria-label="Search results pages" className="mt-4 flex items-center justify-between gap-3">
-      <p className="text-gray-500">
-        {first}–{last} of {result.count}
-      </p>
-      <div className="flex gap-2">
-        <button
-          type="button"
-          onClick={() => onPage(result.page - 1)}
-          disabled={loading || result.page === 1}
-          className={buttonClass}
-        >
-          ‹ Prev
-        </button>
-        <button
-          type="button"
-          onClick={() => onPage(result.page + 1)}
-          disabled={loading || last >= result.count}
-          className={buttonClass}
-        >
-          Next ›
-        </button>
-      </div>
-    </nav>
-  )
-}
