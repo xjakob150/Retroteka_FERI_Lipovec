@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router'
 import client from '../api/client'
 import { VisibilityLabel } from '../components/CollectionCard'
+import ModeratorBar from '../components/ModeratorBar'
 import { useAuth } from '../context/AuthContext'
 
 function PublicItemCard({ item }) {
@@ -73,6 +74,8 @@ export default function PublicCollectionPage() {
   }
 
   const isOwner = user?.username === collection.owner
+  // Samo za prikaz; skrivanje in razkrivanje dovoli ali zavrne backend.
+  const isModerator = user?.role === 'moderator' || user?.role === 'admin'
 
   return (
     <div>
@@ -89,6 +92,14 @@ export default function PublicCollectionPage() {
       </div>
       <p className="mt-1 text-gray-500">by {collection.owner} · Public collection</p>
       {collection.description && <p className="mt-1 text-gray-700">{collection.description}</p>}
+
+      {isModerator && (
+        <ModeratorBar
+          collection={collection}
+          isOwn={isOwner}
+          onChanged={(changed) => setCollection({ ...collection, ...changed })}
+        />
+      )}
 
       {isOwner && (
         <p role="note" className="mt-4 rounded-md border border-gray-300 bg-white p-3">
