@@ -4,6 +4,8 @@ from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from collection.ownership import owned_by
+
 from .models import Platform
 from .search import search_games
 from .serializers import PlatformSerializer, SearchQuerySerializer, SearchResultSerializer
@@ -27,9 +29,15 @@ class GameSearchView(APIView):
         games, total, saved_data = search_games(
             params.validated_data['q'], page, params.validated_data.get('platform'),
         )
+        results = SearchResultSerializer(games, many=True).data
+        if request.user.is_authenticated:
+            # Samo prijavljeni dobijo, kje že imajo igro (US-10); gost tega polja ne dobi.
+            owned = owned_by(request.user, games)
+            for result in results:
+                result['owned'] = owned.get(result['id'], [])
         return Response({
             'count': total,
             'page': page,
-            'results': SearchResultSerializer(games, many=True).data,
+            'results': results,
             'saved_data': saved_data,
         })
