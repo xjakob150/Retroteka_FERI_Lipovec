@@ -1,9 +1,12 @@
 import pytest
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
+from django.db import connection
+from django.test.utils import CaptureQueriesContext
 from django.urls import reverse
 from rest_framework.test import APIClient
 
+from collection.models import Collection, CollectionItem
 from games import search
 from games.igdb import IGDBError
 from games.models import Game, Platform
@@ -206,3 +209,74 @@ def test_logged_in_users_are_counted_by_account(igdb):
         clients.append(client)
     assert search_until_throttled(clients[0])[120] == 429
     assert clients[1].get(reverse('game-search'), {'q': 'zelda'}).status_code == 200
+
+
+def logged_in(user):
+    client = APIClient()
+    client.force_authenticate(user)
+    return client
+
+
+def make_user(username='marko'):
+    return get_user_model().objects.create_user(username, f'{username}@example.com', 'dolgo-geslo-1')
+
+
+def own(user, collection_name, game, platform_igdb_id):
+    collection, _ = Collection.objects.get_or_create(user=user, name=collection_name)
+    CollectionItem.objects.create(
+        collection=collection, game=game, platform=Platform.objects.get(igdb_id=platform_igdb_id),
+        region='pal', condition='cib',
+    )
+
+
+def test_logged_in_user_sees_where_they_own_the_game(igdb):
+    user = make_user()
+    [game] = save_games([igdb_game()])
+    own(user, 'For sale', game, PS2)
+    own(user, 'For sale', game, PS2)
+    own(user, 'Main shelf', game, PS1)
+    igdb(games=[igdb_game(2, 'Okami', releases=((PS2, 2006),)), igdb_game()])
+    results = logged_in(user).get(reverse('game-search'), {'q': 'igra'}).data['results']
+    assert results[0]['owned'] == []
+    assert [(entry['platform']['abbreviation'], entry['collection']['name']) for entry in results[1]['owned']] == [
+        ('PS1', 'Main shelf'), ('PS2', 'For sale'),
+    ]
+
+
+def test_guest_gets_no_ownership_field(igdb):
+    [game] = save_games([igdb_game()])
+    own(make_user(), 'For sale', game, PS2)
+    igdb(games=[igdb_game()])
+    assert 'owned' not in get(q='gran turismo').data['results'][0]
+
+
+def test_other_users_items_are_not_shown(igdb):
+    [game] = save_games([igdb_game()])
+    own(make_user('ana'), 'Anina', game, PS2)
+    igdb(games=[igdb_game()])
+    assert logged_in(make_user()).get(reverse('game-search'), {'q': 'gran'}).data['results'][0]['owned'] == []
+
+
+def test_saved_data_results_also_show_ownership(igdb):
+    user = make_user()
+    [game] = save_games([igdb_game()])
+    own(user, 'For sale', game, PS2)
+    igdb(error=IGDBError('timeout'))
+    data = logged_in(user).get(reverse('game-search'), {'q': 'gran turismo'}).data
+    assert data['saved_data'] is True
+    assert data['results'][0]['owned'][0]['collection']['name'] == 'For sale'
+
+
+def test_ownership_adds_one_query_for_the_whole_page(igdb):
+    user = make_user()
+    games = [igdb_game(n, f'Igra {n}') for n in range(1, 11)]
+    for game in save_games(games):
+        own(user, 'Main shelf', game, PS2)
+    igdb(games=games)
+
+    def queries(client):
+        with CaptureQueriesContext(connection) as context:
+            assert client.get(reverse('game-search'), {'q': 'igra'}).status_code == 200
+        return len(context)
+
+    assert queries(logged_in(user)) - queries(APIClient()) == 1
