@@ -173,3 +173,15 @@ def test_list_query_count_does_not_grow(owner):
     for n in range(5):
         Collection.objects.create(user=make_user(f'u{n}'), name=f'Zbirka {n}', is_public=True)
     assert queries() == one
+
+
+@pytest.mark.parametrize('role', [User.Role.MODERATOR, User.Role.ADMIN])
+def test_moderators_see_hidden_collection_made_private_by_owner(owner, role):
+    hidden_private = Collection.objects.create(
+        user=owner, name='Skrita zasebna', is_public=False, is_hidden=True, hidden_at=timezone.now(),
+    )
+    moderator = make_user('mod', role)
+    assert 'Skrita zasebna' in names(client_for(moderator).get(URL))
+    assert client_for(moderator).get(f'{URL}{hidden_private.id}/').status_code == 200
+    assert client_for().get(f'{URL}{hidden_private.id}/').status_code == 404
+    assert client_for(owner).get(f'{URL}{hidden_private.id}/').status_code == 404
