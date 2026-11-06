@@ -1,12 +1,14 @@
-from django.db.models import Count, Prefetch
+from django.db.models import Count, Prefetch, Q
 from django.http import Http404
+from django.utils import timezone
 from rest_framework import mixins, serializers, viewsets
-from rest_framework.exceptions import NotFound
+from rest_framework.decorators import action
+from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from .models import Collection, CollectionItem
-from .permissions import MODERATION_ROLES, IsCollectionOwner, IsItemOwner
+from .permissions import MODERATION_ROLES, CanHideCollection, CanUnhideCollection, IsCollectionOwner, IsItemOwner
 from .serializers import (
     CollectionDetailSerializer,
     CollectionListSerializer,
@@ -83,10 +85,13 @@ class PublicCollectionViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         user = self.request.user
         # Zbirke blokiranih uporabnikov izginejo z javnega seznama (US-24).
-        collections = Collection.objects.filter(is_public=True, user__is_active=True)
-        # Moderator in administrator vidita tudi skrite zbirke, da jih lahko razkrijeta (US-12).
-        if not (user.is_authenticated and user.role in MODERATION_ROLES):
-            collections = collections.filter(is_hidden=False)
+        collections = Collection.objects.filter(user__is_active=True)
+        if user.is_authenticated and user.role in MODERATION_ROLES:
+            # Moderator vidi tudi skrite zbirke, da jih lahko razkrije (US-12), tudi če jih je lastnik
+            # po skritju umaknil v zasebno; sicer zbirke ne bi mogel razkriti nihče.
+            collections = collections.filter(Q(is_public=True) | Q(is_hidden=True))
+        else:
+            collections = collections.filter(is_public=True, is_hidden=False)
         collections = collections.select_related('user').annotate(item_count=Count('items'))
         if self.action == 'retrieve':
             items = CollectionItem.objects.select_related('game', 'platform').order_by('game__title', 'id')
@@ -116,3 +121,27 @@ class PublicCollectionViewSet(viewsets.ReadOnlyModelViewSet):
             'page': page,
             'results': self.get_serializer(collections[offset:offset + PUBLIC_PAGE_SIZE], many=True).data,
         })
+
+    @action(detail=True, methods=['post'], permission_classes=[CanHideCollection])
+    def hide(self, request, pk=None):
+        collection = self.get_object()
+        if collection.is_hidden:
+            # Ponovno skrivanje bi prepisalo, kdo in kdaj je zbirko skril.
+            raise ValidationError({'detail': 'This collection is already hidden.'})
+        collection.is_hidden = True
+        collection.hidden_by = request.user
+        collection.hidden_at = timezone.now()
+        collection.save(update_fields=['is_hidden', 'hidden_by', 'hidden_at'])
+        return Response(PublicCollectionSerializer(collection).data)
+
+    @action(detail=True, methods=['post'], permission_classes=[CanUnhideCollection])
+    def unhide(self, request, pk=None):
+        # CanUnhideCollection zavrne moderatorja, ki bi razkril svojo zbirko.
+        collection = self.get_object()
+        if not collection.is_hidden:
+            raise ValidationError({'detail': 'This collection is not hidden.'})
+        collection.is_hidden = False
+        collection.hidden_by = None
+        collection.hidden_at = None
+        collection.save(update_fields=['is_hidden', 'hidden_by', 'hidden_at'])
+        return Response(PublicCollectionSerializer(collection).data)
