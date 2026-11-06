@@ -35,6 +35,11 @@ export default function Layout() {
           </nav>
           {user ? (
             <div className="ml-auto flex min-w-0 items-center gap-3">
+              {(user.role === 'moderator' || user.role === 'admin') && (
+                <span className="hidden rounded border border-gray-400 px-2 py-0.5 text-xs font-semibold tracking-wide uppercase sm:inline">
+                  {user.role === 'admin' ? 'Admin' : 'Moderator'}
+                </span>
+              )}
               <span className="hidden truncate font-medium sm:inline">{user.username}</span>
               <button
                 type="button"
