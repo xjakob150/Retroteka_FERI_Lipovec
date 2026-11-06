@@ -8,7 +8,7 @@ export default function GameResult({ game, onAdd, addedTo }) {
   ].filter(Boolean)
 
   return (
-    <li className="flex gap-4 border-b border-gray-200 py-4">
+    <li className="flex flex-wrap gap-4 border-b border-gray-200 py-4 sm:flex-nowrap">
       {game.cover_url ? (
         <img
           src={game.cover_url}
@@ -22,6 +22,20 @@ export default function GameResult({ game, onAdd, addedTo }) {
       <div className="min-w-0 flex-1">
         <h2 className="text-lg font-semibold">{game.title}</h2>
         <p className="text-gray-500">{details.join(' · ')}</p>
+        {game.owned?.length > 0 && (
+          <ul aria-label="In your collections" className="mt-2 flex flex-wrap gap-2">
+            {game.owned.map(({ platform, collection }) => (
+              <li key={`${platform.id}-${collection.id}`} className="max-w-full">
+                <Link
+                  to={`/collections/${collection.id}`}
+                  className="inline-block max-w-full rounded-xl bg-gray-800 px-3 py-0.5 text-sm break-words text-white hover:bg-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400"
+                >
+                  In collection · {platform.abbreviation || platform.name} · {collection.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
         {addedTo && (
           <p role="status" className="mt-1 text-sm">
             Added to{' '}
@@ -31,8 +45,9 @@ export default function GameResult({ game, onAdd, addedTo }) {
           </p>
         )}
       </div>
+      {/* Na telefonu gre gumb v svojo vrstico, da naslov ostane širok. */}
       {onAdd && (
-        <div className="shrink-0 self-center">
+        <div className="basis-full sm:basis-auto sm:shrink-0 sm:self-center">
           <button
             type="button"
             onClick={() => onAdd(game)}
