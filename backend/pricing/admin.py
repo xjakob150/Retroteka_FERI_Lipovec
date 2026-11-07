@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from config.admin_utils import ReadOnlyAdmin
+
+from .models import PriceCheck
+
+admin.site.register(PriceCheck, ReadOnlyAdmin)

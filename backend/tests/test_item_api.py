@@ -8,6 +8,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from collection.models import Collection, CollectionItem
 from games import search
 from games.models import Game, GameRelease, Platform
+from pricing.services import record_price_check
 
 User = get_user_model()
 
@@ -208,3 +209,54 @@ def test_item_endpoints_never_call_igdb(owner, item, monkeypatch):
     assert client.get(detail_url(item.id)).status_code == 200
     assert client.patch(detail_url(item.id), {'notes': 'x'}, format='json').status_code == 200
     assert client.delete(detail_url(item.id)).status_code == 204
+
+
+@pytest.fixture
+def priced_item(owner, item):
+    record_price_check(item, '15.40', 21)
+    record_price_check(item, '18.50', 23)
+    return item
+
+
+@pytest.mark.parametrize('changes', [
+    {'region': 'ntsc_j'},
+    {'condition': 'loose'},
+    {'platform': 'n64'},
+])
+def test_changing_edition_deletes_price_history(owner, priced_item, changes):
+    if changes.get('platform') == 'n64':
+        n64 = Platform.objects.create(igdb_id=4, name='Nintendo 64', abbreviation='N64', is_supported=True)
+        GameRelease.objects.create(game=priced_item.game, platform=n64)
+        changes = {'platform': n64.id}
+    response = client_for(owner).patch(detail_url(priced_item.id), changes, format='json')
+    assert response.status_code == 200
+    assert (response.data['estimated_price'], response.data['price_checked_at']) == (None, None)
+    priced_item.refresh_from_db()
+    assert priced_item.price_checks.count() == 0
+    assert (priced_item.estimated_price, priced_item.price_checked_at) == (None, None)
+
+
+@pytest.mark.parametrize('changes', [
+    {'notes': 'Nove opombe'},
+    {'purchase_price': '20.00'},
+    {'region': 'pal', 'condition': 'cib'},
+])
+def test_other_changes_keep_price_history(owner, priced_item, changes):
+    assert client_for(owner).patch(detail_url(priced_item.id), changes, format='json').status_code == 200
+    priced_item.refresh_from_db()
+    assert priced_item.price_checks.count() == 2
+    assert f'{priced_item.estimated_price}' == '18.50'
+
+
+def test_moving_item_keeps_price_history(owner, priced_item):
+    for_sale = Collection.objects.create(user=owner, name='For sale')
+    client_for(owner).patch(detail_url(priced_item.id), {'collection': for_sale.id}, format='json')
+    priced_item.refresh_from_db()
+    assert priced_item.price_checks.count() == 2
+
+
+def test_invalid_edition_change_keeps_price_history(owner, priced_item):
+    response = client_for(owner).patch(detail_url(priced_item.id), {'region': 'ntsc_j', 'purchase_price': '-1'}, format='json')
+    assert response.status_code == 400
+    priced_item.refresh_from_db()
+    assert (priced_item.region, priced_item.price_checks.count()) == ('pal', 2)
