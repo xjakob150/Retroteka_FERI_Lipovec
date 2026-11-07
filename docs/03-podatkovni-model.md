@@ -59,6 +59,7 @@ Baza je relacijska (PostgreSQL) in hrani vnose uporabnikov ter toliko podatkov o
 - **Regija je ločena od platforme.** Ista igra za PS2 je lahko PAL ali NTSC-U; regija vpliva na ceno in na statistiko, pri primerjavi zbirk pa se namenoma ne upošteva.
 - **Zgodovina cen je svoja entiteta.** Vsak pregled se ohrani z datumom, ceno, številom oglasov in virom. `estimated_price` in `price_checked_at` na izvodu sta namenoma podvojena vrednost zadnjega pregleda: seznam zbirke in izračun vrednosti tako ne potrebujeta podpoizvedbe, pravilo o enem osveževanju na dan pa se preveri na samem izvodu.
 - Sprememba platforme, regije ali stanja izvoda izbriše njegove `PriceCheck` zapise, ker se nanašajo na drugo izdajo.
+- `PriceCheck.price` je prazen, kadar eBay ni našel nobenega oglasa: pregled se vseeno zapiše z 0 oglasi, izvod pa pokaže »Price not available«. Napaka ali pretek časa pri eBayu pregleda ne zapiše, zato prejšnja cena ostane.
 - `PriceCheck.source` obstaja zato, ker je odjemalec za cene ločen modul in je vir mogoče zamenjati (glej `04-arhitektura-in-tehnoloski-sklad.md`). Cene so v EUR, `currency` je zapisana zaradi sledljivosti pregleda.
 - **Seznam želja ni zbirka.** `WishlistItem` visi neposredno na uporabniku, zato seznam obstaja od registracije, ga ni mogoče izbrisati in se ne šteje v vrednost zbirk. Želja tudi ni izvod – uporabnik je igre še nima, zato sta regija in stanje neobvezna.
 - Vloga je polje na uporabniku, ker ima vsak uporabnik natanko eno vlogo.

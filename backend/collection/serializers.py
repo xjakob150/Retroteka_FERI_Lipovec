@@ -2,6 +2,7 @@ from django.db import IntegrityError, transaction
 from rest_framework import serializers
 
 from games.models import Game, GameRelease, Platform
+from pricing.services import clear_price_checks
 
 from .models import Collection, CollectionItem
 
@@ -10,6 +11,8 @@ HIDDEN_CANNOT_BE_PUBLIC = 'A collection hidden by a moderator cannot be made pub
 NOT_OWN_COLLECTION = 'Select one of your collections.'
 NOT_RELEASED_ON_PLATFORM = 'Select a platform the game was released on.'
 UNKNOWN_GAME = 'Select a game from the search results.'
+# Sprememba katerega koli od teh polj naredi iz izvoda drugo izdajo, zato stare cene ne veljajo več (ADR-0013).
+PRICE_FIELDS = ('platform', 'region', 'condition')
 
 
 def required(field):
@@ -155,6 +158,16 @@ class ItemSerializer(serializers.ModelSerializer):
         if not GameRelease.objects.filter(game=game, platform=platform, platform__is_supported=True).exists():
             raise serializers.ValidationError({'platform': [NOT_RELEASED_ON_PLATFORM]})
         return attrs
+
+    def update(self, item, validated_data):
+        changes_edition = any(
+            field in validated_data and validated_data[field] != getattr(item, field) for field in PRICE_FIELDS
+        )
+        with transaction.atomic():
+            item = super().update(item, validated_data)
+            if changes_edition:
+                clear_price_checks(item)
+        return item
 
     def to_representation(self, item):
         data = CollectionItemSerializer(item).data
