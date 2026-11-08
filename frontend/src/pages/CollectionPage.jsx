@@ -21,7 +21,6 @@ export default function CollectionPage() {
       setCollection(response.data)
       setStatus('ready')
     } catch (error) {
-      // Tuja zbirka je za API enaka neobstoječi, zato oboje pokaže isto sporočilo.
       setStatus(error.response?.status === 404 ? 'not-found' : 'failed')
     }
   }, [id])

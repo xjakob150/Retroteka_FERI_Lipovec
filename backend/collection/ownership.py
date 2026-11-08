@@ -10,7 +10,6 @@ def owned_by(user, games):
         .values(
             'game_id', 'platform_id', 'platform__name', 'platform__abbreviation', 'collection_id', 'collection__name',
         )
-        # Več izvodov na isti platformi v isti zbirki je en vnos.
         .distinct()
         .order_by('platform__abbreviation', 'platform__name', 'collection__name', 'collection_id')
     )

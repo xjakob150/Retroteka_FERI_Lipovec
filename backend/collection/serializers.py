@@ -167,6 +167,7 @@ class ItemSerializer(serializers.ModelSerializer):
             item = super().update(item, validated_data)
             if changes_edition:
                 clear_price_checks(item)
+        self.changed_edition = changes_edition
         return item
 
     def to_representation(self, item):

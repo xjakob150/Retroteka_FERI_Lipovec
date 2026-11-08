@@ -18,7 +18,6 @@ export default function MoveToMenu({ collections, currentId, disabled, onMove })
       return undefined
     }
     menu.current.querySelector('[role=menuitem]')?.focus()
-    // Klik kamorkoli zunaj menija ga zapre.
     function handlePointer(event) {
       if (!menu.current.contains(event.target) && !button.current.contains(event.target)) {
         setOpen(false)

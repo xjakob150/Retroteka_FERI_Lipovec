@@ -6,8 +6,9 @@ from django.utils import timezone
 
 from collection.models import Collection, CollectionItem
 from games.models import Game, Platform
+from pricing.ebay import EbayError
 from pricing.models import PriceCheck
-from pricing.services import record_price_check
+from pricing.services import fetch_price, record_price_check
 
 pytestmark = pytest.mark.django_db
 
@@ -65,3 +66,29 @@ def test_failed_item_update_leaves_no_check(item, monkeypatch):
         record_price_check(item, Decimal('18.50'), 23)
     assert not PriceCheck.objects.exists()
     assert CollectionItem.objects.get(pk=item.pk).estimated_price is None
+
+
+def test_fetch_price_records_median_from_ebay(item, ebay):
+    fake = ebay(result=(Decimal('18.50'), 23))
+    check = fetch_price(item)
+    item.refresh_from_db()
+    assert fake.calls == [item]
+    assert (check.price, check.listing_count, check.source) == (Decimal('18.50'), 23, 'ebay')
+    assert (item.estimated_price, item.price_checked_at) == (Decimal('18.50'), check.checked_at)
+
+
+def test_fetch_price_without_listings_records_price_not_available(item, ebay):
+    ebay(result=(None, 0))
+    check = fetch_price(item)
+    item.refresh_from_db()
+    assert (check.price, check.listing_count, item.estimated_price) == (None, 0, None)
+    assert item.price_checked_at == check.checked_at
+
+
+@pytest.mark.parametrize('message', ['timeout', 'eBay search failed: 503'])
+def test_fetch_price_on_ebay_error_keeps_previous_price(item, ebay, message):
+    record_price_check(item, Decimal('15.40'), 21)
+    ebay(error=EbayError(message))
+    assert fetch_price(item) is None
+    item.refresh_from_db()
+    assert (item.estimated_price, item.price_checks.count()) == (Decimal('15.40'), 1)

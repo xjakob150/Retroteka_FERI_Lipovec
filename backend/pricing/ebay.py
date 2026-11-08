@@ -12,7 +12,6 @@ SEARCH_URL = 'https://api.ebay.com/buy/browse/v1/item_summary/search'
 SCOPE = 'https://api.ebay.com/oauth/api_scope'
 MARKETPLACE = 'EBAY_DE'
 TIMEOUT = 5
-# Enako kot pri IGDB (ADR-0017): žeton v pomnilniku, obnova minuto pred iztekom, brez obnove ob 401.
 RENEW_BEFORE = 60
 # Kategorija video iger; izloči vodiče, plakate in dodatke.
 VIDEO_GAMES_CATEGORY = '139973'
@@ -44,11 +43,11 @@ def any_of(words):
 
 
 def build_query(title, platform, region, condition):
-    platform_words = [word for word in [platform.abbreviation, platform.name] if word]
     excluded = EXCLUDED_WORDS + EXCLUDED_FOR_CONDITION.get(condition, [])
     parts = [
         clean(title),
-        any_of([clean(word) for word in dict.fromkeys(platform_words)]),
+        # Samo kratica: eBay besedne zveze v skupini, npr. "PlayStation 2", ne razume kot celote.
+        clean(platform.abbreviation or platform.name),
         any_of(REGION_WORDS[region]),
         any_of(CONDITION_WORDS[condition]),
         *[f'-{word}' for word in excluded],
@@ -117,7 +116,6 @@ class EbayClient:
         try:
             for listing in data.get('itemSummaries', []):
                 price = listing['price']
-                # Oglas v drugi valuti se izpusti, ker ga ne moremo primerjati.
                 if price['currency'] == 'EUR':
                     prices.append(Decimal(price['value']))
         except (KeyError, TypeError, InvalidOperation) as error:

@@ -45,7 +45,6 @@ export default function GameResult({ game, onAdd, addedTo }) {
           </p>
         )}
       </div>
-      {/* Na telefonu gre gumb v svojo vrstico, da naslov ostane širok. */}
       {onAdd && (
         <div className="basis-full sm:basis-auto sm:shrink-0 sm:self-center">
           <button

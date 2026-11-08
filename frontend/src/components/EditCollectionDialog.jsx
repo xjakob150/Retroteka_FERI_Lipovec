@@ -13,7 +13,6 @@ export default function EditCollectionDialog({ collection, onClose, onSaved }) {
   const [fieldErrors, setFieldErrors] = useState({})
   const [formError, setFormError] = useState('')
   const [submitting, setSubmitting] = useState(false)
-  // Enako pravilo kot v backendu: skrite zasebne zbirke lastnik ne more objaviti (US-12).
   const publicLocked = collection.is_hidden && !collection.is_public
 
   useEffect(() => {

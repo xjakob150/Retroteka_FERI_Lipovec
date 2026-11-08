@@ -34,7 +34,6 @@ export default function RemoveItemDialog({ item, onClose, onRemoved }) {
         <h2 id="remove-item-title" className="mb-3 text-xl font-semibold">
           Remove this copy?
         </h2>
-        {/* Zbirka ima lahko več izvodov iste igre, zato je naveden tudi izvod. */}
         <p id="remove-item-copy" className="mb-5">
           <span className="font-semibold break-words">{item.game.title}</span>
           <br />

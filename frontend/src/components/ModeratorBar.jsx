@@ -32,7 +32,6 @@ export default function ModeratorBar({ collection, isOwn, onChanged }) {
         <>
           <p className="min-w-0 sm:flex-1">This collection is hidden from other visitors.</p>
           {isOwn ? (
-            // Svoje zbirke moderator ne more razkriti (US-12), zato gumba ni.
             <p className="text-gray-600">Another moderator or administrator must make it visible again.</p>
           ) : (
             <button type="button" onClick={() => change('unhide')} disabled={working} className={buttonClass}>

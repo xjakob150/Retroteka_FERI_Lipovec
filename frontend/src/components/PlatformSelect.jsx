@@ -5,7 +5,6 @@ export default function PlatformSelect({ value, onChange }) {
   const [platforms, setPlatforms] = useState([])
 
   useEffect(() => {
-    // Brez seznama ostane samo "Platform: All", iskanje pa deluje naprej.
     client
       .get('/games/platforms/')
       .then((response) => setPlatforms(response.data))

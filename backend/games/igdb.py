@@ -9,7 +9,6 @@ import requests
 TOKEN_URL = 'https://id.twitch.tv/oauth2/token'
 API_URL = 'https://api.igdb.com/v4/'
 TIMEOUT = 5
-# Žeton se obnovi malo pred iztekom, da ne poteče med zahtevo (ADR-0017).
 RENEW_BEFORE = 60
 # IGDB dovoli 4 zahteve na sekundo za celo aplikacijo (ADR-0005).
 MIN_INTERVAL = 0.25
@@ -23,7 +22,7 @@ SEARCH_FIELDS = (
 
 
 class IGDBError(Exception):
-    """IGDB ni dosegljiv ali je zahtevo zavrnil; iskanje takrat vrne shranjene igre."""
+    pass
 
 
 class RateLimiter:
@@ -145,5 +144,4 @@ def to_game(game, platform_ids):
 
 @cache
 def get_client():
-    """Skupni odjemalec za celo aplikacijo, da si iskanja delijo žeton."""
     return IGDBClient()
