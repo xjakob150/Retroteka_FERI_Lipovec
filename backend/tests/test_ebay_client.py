@@ -151,7 +151,7 @@ def price_for(client, body):
 def test_search_params_limit_listings_to_fixed_price_euro_games(client):
     price_for(client, listings())
     params = parse_qs(urlparse(responses.calls[-1].request.url).query)
-    assert params['q'] == ['Okami (PS2, PlayStation 2) PAL (OVP, CIB, complete, Anleitung) -defekt -Konvolut -Sammlung']
+    assert params['q'] == ['Okami PS2 PAL (OVP, CIB, complete, Anleitung) -defekt -Konvolut -Sammlung']
     assert params['filter'] == ['buyingOptions:{FIXED_PRICE},priceCurrency:EUR']
     assert params['category_ids'] == ['139973']
     assert params['limit'] == ['50']

@@ -1,8 +1,12 @@
+import logging
 from decimal import Decimal
 
 from django.db import transaction
 
+from .ebay import EbayError, get_client
 from .models import PriceCheck, PriceSource
+
+logger = logging.getLogger(__name__)
 
 
 def record_price_check(item, price, listing_count, source=PriceSource.EBAY):
@@ -29,3 +33,13 @@ def clear_price_checks(item):
         item.estimated_price = None
         item.price_checked_at = None
         item.save(update_fields=['estimated_price', 'price_checked_at'])
+
+
+def fetch_price(item):
+    """Pridobi okvirno ceno z eBaya in jo zapiše; ob napaki eBaya vrne None in izvod ostane brez nove cene (ADR-0012)."""
+    try:
+        price, listing_count = get_client().price_for(item)
+    except EbayError as error:
+        logger.warning('eBay price for item %s failed: %s', item.pk, error)
+        return None
+    return record_price_check(item, price, listing_count)

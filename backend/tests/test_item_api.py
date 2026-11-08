@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 import pytest
 from django.contrib.auth import get_user_model
 from django.urls import reverse
@@ -260,3 +262,63 @@ def test_invalid_edition_change_keeps_price_history(owner, priced_item):
     assert response.status_code == 400
     priced_item.refresh_from_db()
     assert (priced_item.region, priced_item.price_checks.count()) == ('pal', 2)
+
+
+def test_new_item_gets_price_from_ebay(owner, payload, ebay):
+    fake = ebay(result=(Decimal('18.50'), 23))
+    response = add(owner, payload)
+    assert response.status_code == 201
+    assert response.data['estimated_price'] == '18.50'
+    assert response.data['price_checked_at'] is not None
+    item = CollectionItem.objects.get()
+    assert fake.calls == [item]
+    [check] = item.price_checks.all()
+    assert (check.price, check.listing_count, check.source) == (Decimal('18.50'), 23, 'ebay')
+
+
+def test_ebay_failure_still_saves_item_without_price(owner, payload):
+    response = add(owner, payload)
+    assert response.status_code == 201
+    assert (response.data['estimated_price'], response.data['price_checked_at']) == (None, None)
+    item = CollectionItem.objects.get()
+    assert item.price_checks.count() == 0
+
+
+def test_no_listings_saves_price_not_available(owner, payload, ebay):
+    ebay(result=(None, 0))
+    response = add(owner, payload)
+    assert response.data['estimated_price'] is None
+    assert response.data['price_checked_at'] is not None
+    assert CollectionItem.objects.get().price_checks.get().listing_count == 0
+
+
+def test_invalid_item_does_not_call_ebay(owner, payload, ebay):
+    fake = ebay(result=(Decimal('18.50'), 23))
+    del payload['region']
+    assert add(owner, payload).status_code == 400
+    assert fake.calls == []
+
+
+def test_edition_change_fetches_new_price(owner, priced_item, ebay):
+    fake = ebay(result=(Decimal('9.90'), 7))
+    response = client_for(owner).patch(detail_url(priced_item.id), {'condition': 'loose'}, format='json')
+    assert response.status_code == 200
+    assert response.data['estimated_price'] == '9.90'
+    priced_item.refresh_from_db()
+    assert [check.price for check in priced_item.price_checks.all()] == [Decimal('9.90')]
+    assert fake.calls == [priced_item]
+
+
+def test_edition_change_with_ebay_down_leaves_item_without_price(owner, priced_item):
+    response = client_for(owner).patch(detail_url(priced_item.id), {'region': 'ntsc_j'}, format='json')
+    assert response.status_code == 200
+    assert response.data['estimated_price'] is None
+    priced_item.refresh_from_db()
+    assert (priced_item.region, priced_item.price_checks.count()) == ('ntsc_j', 0)
+
+
+@pytest.mark.parametrize('changes', [{'notes': 'Nove opombe'}, {'region': 'pal', 'condition': 'cib'}])
+def test_other_changes_do_not_call_ebay(owner, priced_item, ebay, changes):
+    fake = ebay(result=(Decimal('9.90'), 7))
+    client_for(owner).patch(detail_url(priced_item.id), changes, format='json')
+    assert fake.calls == []

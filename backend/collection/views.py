@@ -7,6 +7,8 @@ from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
+from pricing.services import fetch_price
+
 from .models import Collection, CollectionItem
 from .permissions import MODERATION_ROLES, CanHideCollection, CanUnhideCollection, IsCollectionOwner, IsItemOwner
 from .serializers import (
@@ -31,7 +33,6 @@ class CollectionViewSet(
     viewsets.GenericViewSet,
 ):
     permission_classes = [IsCollectionOwner]
-    # Urejanje je samo delno (PATCH); PUT bi zahteval vsa polja.
     http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
 
     def get_queryset(self):
@@ -60,7 +61,6 @@ class ItemViewSet(
     viewsets.GenericViewSet,
 ):
     permission_classes = [IsItemOwner]
-    # Urejanje in premik sta delna (PATCH); PUT bi zahteval vsa polja.
     http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
 
     def get_queryset(self):
@@ -71,6 +71,15 @@ class ItemViewSet(
         if self.action in ('retrieve', 'partial_update'):
             return ItemDetailSerializer
         return ItemSerializer
+
+    # eBay se pokliče šele po shranjenem izvodu in zunaj transakcije, zato ga napaka eBaya ne razveljavi (ADR-0012).
+    def perform_create(self, serializer):
+        fetch_price(serializer.save())
+
+    def perform_update(self, serializer):
+        item = serializer.save()
+        if serializer.changed_edition:
+            fetch_price(item)
 
 
 class PublicPageSerializer(serializers.Serializer):

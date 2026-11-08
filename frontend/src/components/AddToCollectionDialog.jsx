@@ -238,7 +238,6 @@ export default function AddToCollectionDialog({ game, preferredPlatformId, onClo
 
             <fieldset className="mt-4" aria-describedby={describedBy('condition')}>
               <legend className={labelClass}>Condition *</legend>
-              {/* Radijski gumbi z videzom gumbov, zato delujejo tudi s tipkovnico (puščice). */}
               <div className="grid grid-cols-3 sm:flex">
                 {CONDITIONS.map(([value, label]) => (
                   <label

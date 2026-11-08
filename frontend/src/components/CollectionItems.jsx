@@ -21,7 +21,6 @@ function platformName(item) {
 export default function CollectionItems({ items }) {
   return (
     <>
-      {/* Na računalniku tabela po wireframu 4, na telefonu vrstice kot pri iskanju. */}
       <table className="hidden w-full text-left sm:table">
         <thead className="text-xs font-semibold tracking-wide text-gray-600 uppercase">
           <tr className="border-b border-gray-300">

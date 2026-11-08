@@ -38,7 +38,6 @@ export default function PublicCollectionPage() {
       setCollection(response.data)
       setStatus('ready')
     } catch (error) {
-      // Zasebna, skrita in neobstoječa zbirka so za API enake (US-11).
       setStatus(error.response?.status === 404 ? 'not-found' : 'failed')
     }
   }, [id])

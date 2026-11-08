@@ -31,7 +31,6 @@ class GameSearchView(APIView):
         )
         results = SearchResultSerializer(games, many=True).data
         if request.user.is_authenticated:
-            # Samo prijavljeni dobijo, kje že imajo igro (US-10); gost tega polja ne dobi.
             owned = owned_by(request.user, games)
             for result in results:
                 result['owned'] = owned.get(result['id'], [])
