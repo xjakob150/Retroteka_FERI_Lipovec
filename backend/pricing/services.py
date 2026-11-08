@@ -1,5 +1,5 @@
 import logging
-from decimal import Decimal
+from decimal import ROUND_HALF_UP, Decimal
 
 from django.db import transaction
 
@@ -43,3 +43,14 @@ def fetch_price(item):
         logger.warning('eBay price for item %s failed: %s', item.pk, error)
         return None
     return record_price_check(item, price, listing_count)
+
+
+def price_difference(estimated_price, purchase_price):
+    """Vrne (razlika v EUR, odstotek) med okvirno in nakupno ceno (US-13); odstotek je None pri nakupni ceni 0."""
+    if estimated_price is None or purchase_price is None:
+        return None, None
+    difference = (estimated_price - purchase_price).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+    if purchase_price == 0:
+        return difference, None
+    percent = (difference / purchase_price * 100).quantize(Decimal('1'), rounding=ROUND_HALF_UP)
+    return difference, int(percent)

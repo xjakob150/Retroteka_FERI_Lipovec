@@ -322,3 +322,30 @@ def test_other_changes_do_not_call_ebay(owner, priced_item, ebay, changes):
     fake = ebay(result=(Decimal('9.90'), 7))
     client_for(owner).patch(detail_url(priced_item.id), changes, format='json')
     assert fake.calls == []
+
+
+def test_item_detail_shows_listing_count_and_difference(owner, payload, ebay):
+    ebay(result=(Decimal('18.50'), 23))
+    item_id = add(owner, payload).data['id']
+    data = client_for(owner).get(detail_url(item_id)).data
+    assert (data['estimated_price'], data['listing_count']) == ('18.50', 23)
+    assert (data['price_difference'], data['price_difference_percent']) == ('6.00', 48)
+
+
+def test_item_detail_without_any_check(owner, payload):
+    data = client_for(owner).get(detail_url(add(owner, payload).data['id'])).data
+    assert (data['estimated_price'], data['listing_count'], data['price_difference']) == (None, None, None)
+
+
+def test_item_detail_after_check_without_listings(owner, payload, ebay):
+    ebay(result=(None, 0))
+    data = client_for(owner).get(detail_url(add(owner, payload).data['id'])).data
+    assert (data['estimated_price'], data['listing_count'], data['price_difference_percent']) == (None, 0, None)
+    assert data['price_checked_at'] is not None
+
+
+def test_collection_list_of_items_includes_estimated_price(owner, payload, ebay):
+    ebay(result=(Decimal('18.50'), 23))
+    add(owner, payload)
+    [item] = client_for(owner).get(f"/api/collections/{payload['collection']}/").data['items']
+    assert item['estimated_price'] == '18.50'

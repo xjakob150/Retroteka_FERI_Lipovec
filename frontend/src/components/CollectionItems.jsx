@@ -2,8 +2,16 @@ import { Link } from 'react-router'
 
 const price = new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR' })
 
+export function formatEuro(value) {
+  return price.format(value)
+}
+
 export function purchasePrice(item) {
   return item.purchase_price === null ? '—' : price.format(item.purchase_price)
+}
+
+export function estimatedPrice(item) {
+  return item.estimated_price === null ? 'Price not available' : `≈ ${price.format(item.estimated_price)}`
 }
 
 function Cover({ item }) {
@@ -31,7 +39,8 @@ export default function CollectionItems({ items }) {
             <th scope="col" className="py-2">Platform</th>
             <th scope="col" className="py-2">Region</th>
             <th scope="col" className="py-2">Condition</th>
-            <th scope="col" className="py-2 text-right">Purchase</th>
+            <th scope="col" className="py-2 pr-4 text-right">Purchase</th>
+            <th scope="col" className="py-2 text-right">Est. price</th>
           </tr>
         </thead>
         <tbody>
@@ -48,7 +57,12 @@ export default function CollectionItems({ items }) {
               <td className="py-2 pr-4">{platformName(item)}</td>
               <td className="py-2 pr-4">{item.region_label}</td>
               <td className="py-2 pr-4">{item.condition_label}</td>
-              <td className="py-2 text-right whitespace-nowrap">{purchasePrice(item)}</td>
+              <td className="py-2 pr-4 text-right whitespace-nowrap">{purchasePrice(item)}</td>
+              <td
+                className={`py-2 text-right ${item.estimated_price === null ? 'text-sm text-gray-500' : 'whitespace-nowrap'}`}
+              >
+                {estimatedPrice(item)}
+              </td>
             </tr>
           ))}
         </tbody>
@@ -64,6 +78,9 @@ export default function CollectionItems({ items }) {
               </Link>
               <p className="text-gray-500">
                 {[platformName(item), item.region_label, item.condition_label, purchasePrice(item)].join(' · ')}
+              </p>
+              <p className={item.estimated_price === null ? 'text-sm text-gray-500' : 'font-medium'}>
+                {estimatedPrice(item)}
               </p>
             </div>
           </li>

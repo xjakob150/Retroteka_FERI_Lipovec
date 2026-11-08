@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router'
 import client from '../api/client'
 import { purchasePrice } from '../components/CollectionItems'
 import EditItemDialog from '../components/EditItemDialog'
+import EstimatedPrice from '../components/EstimatedPrice'
 import MoveToMenu from '../components/MoveToMenu'
 import RemoveItemDialog from '../components/RemoveItemDialog'
 
@@ -157,18 +158,21 @@ export default function ItemPage() {
           {game.summary && <p className="text-gray-700">{game.summary}</p>}
         </section>
 
-        <section aria-labelledby="this-copy" className="self-start rounded-lg border border-gray-300 bg-white p-5">
-          <h2 id="this-copy" className="mb-3 text-xl font-semibold">
-            This copy
-          </h2>
-          <dl>
-            <Row label="Platform">{item.platform.abbreviation || item.platform.name}</Row>
-            <Row label="Region">{item.region_label}</Row>
-            <Row label="Condition">{item.condition_label}</Row>
-            <Row label="Purchase price">{purchasePrice(item)}</Row>
-            <Row label="Notes">{item.notes || '—'}</Row>
-          </dl>
-        </section>
+        <div className="flex flex-col gap-6 self-start">
+          <section aria-labelledby="this-copy" className="rounded-lg border border-gray-300 bg-white p-5">
+            <h2 id="this-copy" className="mb-3 text-xl font-semibold">
+              This copy
+            </h2>
+            <dl>
+              <Row label="Platform">{item.platform.abbreviation || item.platform.name}</Row>
+              <Row label="Region">{item.region_label}</Row>
+              <Row label="Condition">{item.condition_label}</Row>
+              <Row label="Purchase price">{purchasePrice(item)}</Row>
+              <Row label="Notes">{item.notes || '—'}</Row>
+            </dl>
+          </section>
+          <EstimatedPrice item={item} />
+        </div>
       </div>
 
       {removing && (

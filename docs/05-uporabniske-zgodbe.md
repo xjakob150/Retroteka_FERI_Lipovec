@@ -243,7 +243,7 @@
 **Acceptance criteria:**
 
 1. When an item is saved, the system looks up current eBay listings for the same game, platform, region and condition and uses the median of their prices in EUR as the estimated price.
-2. The price is shown on the item page and in the collection list with the label "estimated", the date of the check and the number of listings used (e.g. "median of 23 eBay listings").
+2. The collection list shows the price as an approximation (e.g. "≈ €18.50"). The item page shows it with the label "estimated", the date of the check and the number of listings used (e.g. "median of 23 eBay listings").
 3. If the purchase price is known, the item page also shows the difference, e.g. "Bought for €12.00 → +€6.50 (+54 %)".
 4. **Scenario – no price available**
    - **Given** eBay is unavailable or has no matching listings,
