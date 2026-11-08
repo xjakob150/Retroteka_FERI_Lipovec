@@ -231,6 +231,7 @@ def test_detail_lists_items_sorted_by_title(ps2):
         'condition': 'cib',
         'condition_label': 'Complete in box',
         'purchase_price': '12.50',
+        'estimated_price': None,
     }
 
 

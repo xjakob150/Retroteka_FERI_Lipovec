@@ -8,7 +8,7 @@ from collection.models import Collection, CollectionItem
 from games.models import Game, Platform
 from pricing.ebay import EbayError
 from pricing.models import PriceCheck
-from pricing.services import fetch_price, record_price_check
+from pricing.services import fetch_price, price_difference, record_price_check
 
 pytestmark = pytest.mark.django_db
 
@@ -92,3 +92,20 @@ def test_fetch_price_on_ebay_error_keeps_previous_price(item, ebay, message):
     assert fetch_price(item) is None
     item.refresh_from_db()
     assert (item.estimated_price, item.price_checks.count()) == (Decimal('15.40'), 1)
+
+
+@pytest.mark.parametrize('estimated, purchase, expected', [
+    ('18.50', '12.00', (Decimal('6.50'), 54)),
+    ('9.00', '12.00', (Decimal('-3.00'), -25)),
+    ('12.00', '12.00', (Decimal('0.00'), 0)),
+    ('18.50', '0', (Decimal('18.50'), None)),
+    ('10.00', '3.00', (Decimal('7.00'), 233)),
+    ('1.00', '8.00', (Decimal('-7.00'), -88)),
+])
+def test_price_difference(estimated, purchase, expected):
+    assert price_difference(Decimal(estimated), Decimal(purchase)) == expected
+
+
+@pytest.mark.parametrize('estimated, purchase', [(None, Decimal('12')), (Decimal('18.5'), None), (None, None)])
+def test_no_difference_without_both_prices(estimated, purchase):
+    assert price_difference(estimated, purchase) == (None, None)
