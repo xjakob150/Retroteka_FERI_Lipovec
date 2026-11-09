@@ -17,7 +17,6 @@ class FakeEbay:
 
 @pytest.fixture(autouse=True)
 def ebay(monkeypatch):
-    """Testi nikoli ne kličejo pravega eBaya; privzeto je eBay nedosegljiv, test pa lahko nastavi odgovor."""
     def use(**kwargs):
         fake = FakeEbay(**kwargs)
         monkeypatch.setattr(services, 'get_client', lambda: fake)

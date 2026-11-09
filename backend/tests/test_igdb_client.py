@@ -171,7 +171,6 @@ def test_get_client_returns_one_shared_client():
     assert get_client() is get_client()
 
 
-# Oblika odgovora je povzeta po pravem odgovoru IGDB za "gran turismo".
 GRAN_TURISMO_4 = {
     'id': 1601,
     'name': 'Gran Turismo 4',

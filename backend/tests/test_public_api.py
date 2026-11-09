@@ -120,7 +120,7 @@ def test_guest_opens_public_collection_without_prices_or_notes(public_with_item)
     assert (response.data['owner'], response.data['item_count']) == ('marko', 2)
     assert [item['game']['title'] for item in response.data['items']] == ['Gran Turismo 4', 'Okami']
     for item in response.data['items']:
-        assert 'purchase_price' not in item and 'notes' not in item
+        assert 'purchase_price' not in item and 'notes' not in item and 'can_refresh_price' not in item
     assert b'Skrivna opomba' not in response.content
     assert b'12.00' not in response.content
 

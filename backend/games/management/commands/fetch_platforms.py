@@ -7,7 +7,6 @@ from games.igdb import IGDBError, get_client
 
 FIXTURE = Path(__file__).resolve().parents[2] / 'fixtures' / 'platforms.json'
 
-# igdb_id: (manufacturer, abbreviation). IGDB has no manufacturer and its abbreviations are uneven.
 SUPPORTED = {
     59: ('Atari', '2600'),
     66: ('Atari', '5200'),
@@ -60,7 +59,6 @@ def to_fixture_row(platform):
     manufacturer, abbreviation = SUPPORTED.get(platform['id'], ('', platform.get('abbreviation', '')))
     return {
         'model': 'games.platform',
-        # pk equals igdb_id so regenerating the fixture never moves existing rows.
         'pk': platform['id'],
         'fields': {
             'igdb_id': platform['id'],

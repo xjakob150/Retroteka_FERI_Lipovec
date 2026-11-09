@@ -2,7 +2,6 @@ import axios from 'axios'
 
 export const REFRESH_TOKEN_KEY = 'refreshToken'
 
-// Pri teh poteh 401 ne pomeni poteklega access žetona.
 const PATHS_WITHOUT_REFRESH = ['/auth/login/', '/auth/register/', '/auth/refresh/', '/auth/logout/']
 
 let accessToken = null

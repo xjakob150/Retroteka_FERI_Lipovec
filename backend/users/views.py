@@ -45,7 +45,6 @@ class LoginView(APIView):
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         username = serializer.validated_data['username']
-        # Uporabniško ime je v bazi zapisano tako, kot ga je uporabnik vnesel ob registraciji.
         stored = User.objects.filter(username__iexact=username).first()
         user = authenticate(
             request,
@@ -72,7 +71,6 @@ class LogoutView(APIView):
         try:
             RefreshToken(serializer.validated_data['refresh']).blacklist()
         except TokenError:
-            # Potekel, že preklican ali neveljaven žeton: uporabnik je vseeno odjavljen (ADR-0016).
             pass
         return Response(status=status.HTTP_204_NO_CONTENT)
 

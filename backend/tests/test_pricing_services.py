@@ -1,3 +1,4 @@
+from datetime import datetime, time, timedelta
 from decimal import Decimal
 
 import pytest
@@ -8,7 +9,7 @@ from collection.models import Collection, CollectionItem
 from games.models import Game, Platform
 from pricing.ebay import EbayError
 from pricing.models import PriceCheck
-from pricing.services import fetch_price, price_difference, record_price_check
+from pricing.services import can_refresh_price, fetch_price, price_difference, record_price_check
 
 pytestmark = pytest.mark.django_db
 
@@ -109,3 +110,35 @@ def test_price_difference(estimated, purchase, expected):
 @pytest.mark.parametrize('estimated, purchase', [(None, Decimal('12')), (Decimal('18.5'), None), (None, None)])
 def test_no_difference_without_both_prices(estimated, purchase):
     assert price_difference(estimated, purchase) == (None, None)
+
+
+def local_midnight_today():
+    return timezone.make_aware(datetime.combine(timezone.localdate(), time.min))
+
+
+def checked(item, at):
+    item.price_checked_at = at
+    return item
+
+
+def test_unchecked_item_can_be_refreshed(item):
+    assert can_refresh_price(item)
+
+
+def test_item_checked_today_cannot_be_refreshed(item):
+    record_price_check(item, Decimal('18.50'), 23)
+    assert not can_refresh_price(item)
+
+
+def test_check_at_local_midnight_counts_as_today(item):
+    assert not can_refresh_price(checked(item, local_midnight_today()))
+
+
+def test_check_just_before_local_midnight_counts_as_yesterday(item):
+    assert can_refresh_price(checked(item, local_midnight_today() - timedelta(minutes=30)))
+
+
+def test_failed_check_does_not_lock_refresh(item, ebay):
+    ebay(error=EbayError('timeout'))
+    fetch_price(item)
+    assert can_refresh_price(item)

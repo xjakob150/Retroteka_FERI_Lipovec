@@ -73,7 +73,6 @@ export default function PublicCollectionPage() {
   }
 
   const isOwner = user?.username === collection.owner
-  // Samo za prikaz; skrivanje in razkrivanje dovoli ali zavrne backend.
   const isModerator = user?.role === 'moderator' || user?.role === 'admin'
 
   return (

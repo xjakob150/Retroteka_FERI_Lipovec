@@ -1,13 +1,13 @@
 from django.db.models import Count, Prefetch, Q
 from django.http import Http404
 from django.utils import timezone
-from rest_framework import mixins, serializers, viewsets
+from rest_framework import mixins, serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from pricing.services import fetch_price
+from pricing.services import can_refresh_price, fetch_price
 
 from .models import Collection, CollectionItem
 from .permissions import MODERATION_ROLES, CanHideCollection, CanUnhideCollection, IsCollectionOwner, IsItemOwner
@@ -36,7 +36,6 @@ class CollectionViewSet(
     http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
 
     def get_queryset(self):
-        # Vsa dejanja vidijo samo zbirke prijavljenega uporabnika, zato je tuja zbirka 404.
         collections = Collection.objects.filter(user=self.request.user)
         if self.action in ('list', 'retrieve'):
             items = CollectionItem.objects.select_related('game', 'platform').order_by('game__title', 'id')
@@ -64,15 +63,13 @@ class ItemViewSet(
     http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
 
     def get_queryset(self):
-        # Samo izvodi v zbirkah prijavljenega uporabnika, zato je tuj izvod 404.
         return CollectionItem.objects.filter(collection__user=self.request.user).select_related('game', 'platform')
 
     def get_serializer_class(self):
-        if self.action in ('retrieve', 'partial_update'):
+        if self.action in ('retrieve', 'partial_update', 'refresh_price'):
             return ItemDetailSerializer
         return ItemSerializer
 
-    # eBay se pokliče šele po shranjenem izvodu in zunaj transakcije, zato ga napaka eBaya ne razveljavi (ADR-0012).
     def perform_create(self, serializer):
         fetch_price(serializer.save())
 
@@ -81,23 +78,29 @@ class ItemViewSet(
         if serializer.changed_edition:
             fetch_price(item)
 
+    @action(detail=True, methods=['post'], url_path='refresh-price')
+    def refresh_price(self, request, pk=None):
+        item = self.get_object()
+        if not can_refresh_price(item):
+            return Response({'detail': 'Available again tomorrow'}, status=status.HTTP_429_TOO_MANY_REQUESTS)
+        if fetch_price(item) is None:
+            return Response(
+                {'detail': 'The price cannot be refreshed right now'}, status=status.HTTP_503_SERVICE_UNAVAILABLE,
+            )
+        return Response(self.get_serializer(item).data)
+
 
 class PublicPageSerializer(serializers.Serializer):
     page = serializers.IntegerField(min_value=1, default=1)
 
 
 class PublicCollectionViewSet(viewsets.ReadOnlyModelViewSet):
-    """Javne zbirke za vse, tudi goste; brez nakupnih cen in opomb (US-11)."""
-
     permission_classes = [AllowAny]
 
     def get_queryset(self):
         user = self.request.user
-        # Zbirke blokiranih uporabnikov izginejo z javnega seznama (US-24).
         collections = Collection.objects.filter(user__is_active=True)
         if user.is_authenticated and user.role in MODERATION_ROLES:
-            # Moderator vidi tudi skrite zbirke, da jih lahko razkrije (US-12), tudi če jih je lastnik
-            # po skritju umaknil v zasebno; sicer zbirke ne bi mogel razkriti nihče.
             collections = collections.filter(Q(is_public=True) | Q(is_hidden=True))
         else:
             collections = collections.filter(is_public=True, is_hidden=False)
@@ -113,7 +116,6 @@ class PublicCollectionViewSet(viewsets.ReadOnlyModelViewSet):
         return PublicCollectionSerializer
 
     def get_object(self):
-        # Zasebna, skrita, blokirana in neobstoječa zbirka so videti enako.
         try:
             return super().get_object()
         except Http404:
@@ -135,7 +137,6 @@ class PublicCollectionViewSet(viewsets.ReadOnlyModelViewSet):
     def hide(self, request, pk=None):
         collection = self.get_object()
         if collection.is_hidden:
-            # Ponovno skrivanje bi prepisalo, kdo in kdaj je zbirko skril.
             raise ValidationError({'detail': 'This collection is already hidden.'})
         collection.is_hidden = True
         collection.hidden_by = request.user
@@ -145,7 +146,6 @@ class PublicCollectionViewSet(viewsets.ReadOnlyModelViewSet):
 
     @action(detail=True, methods=['post'], permission_classes=[CanUnhideCollection])
     def unhide(self, request, pk=None):
-        # CanUnhideCollection zavrne moderatorja, ki bi razkril svojo zbirko.
         collection = self.get_object()
         if not collection.is_hidden:
             raise ValidationError({'detail': 'This collection is not hidden.'})

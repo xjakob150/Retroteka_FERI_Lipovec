@@ -30,7 +30,6 @@ export default function CollectionPage() {
   }, [loadCollection])
 
   function handleSaved(saved) {
-    // Odgovor vsebuje samo polja zbirke, izvodi in število ostanejo iz prejšnjega nalaganja.
     setCollection({ ...collection, ...saved })
     setEditing(false)
   }

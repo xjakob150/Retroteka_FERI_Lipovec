@@ -43,7 +43,6 @@ export default function ItemPage() {
   const loadItem = useCallback(async () => {
     setStatus('loading')
     try {
-      // Seznam zbirk da ime trenutne zbirke za drobtinice in zbirke za "Move to…".
       const [itemResponse, collectionsResponse] = await Promise.all([
         client.get(`/items/${id}/`),
         client.get('/collections/'),
