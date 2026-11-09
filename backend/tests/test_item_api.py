@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 from decimal import Decimal
 
 import pytest
@@ -430,3 +430,36 @@ def test_other_users_cannot_refresh_price(priced_item, role, ebay):
 
 def test_guest_cannot_refresh_price(priced_item):
     assert APIClient().post(refresh_url(priced_item.id)).status_code == 401
+
+
+def history(response):
+    return [(check['price'], check['listing_count']) for check in response.data['price_checks']]
+
+
+def test_item_detail_lists_price_checks_newest_first(owner, priced_item):
+    record_price_check(priced_item, None, 0)
+    response = client_for(owner).get(detail_url(priced_item.id))
+    assert history(response) == [(None, 0), ('18.50', 23), ('15.40', 21)]
+    newest = priced_item.price_checks.first()
+    assert response.data['price_checks'][0] == {
+        'id': newest.id, 'checked_at': response.data['price_checks'][0]['checked_at'],
+        'price': None, 'listing_count': 0, 'source': 'ebay', 'source_label': 'eBay',
+    }
+    assert datetime.fromisoformat(response.data['price_checks'][0]['checked_at']) == newest.checked_at
+
+
+def test_item_without_checks_has_empty_history(owner, item):
+    assert client_for(owner).get(detail_url(item.id)).data['price_checks'] == []
+
+
+def test_refresh_adds_check_to_top_of_history(owner, priced_item, ebay):
+    checked_yesterday(priced_item)
+    ebay(result=(Decimal('21.00'), 30))
+    response = client_for(owner).post(refresh_url(priced_item.id))
+    assert history(response) == [('21.00', 30), ('18.50', 23), ('15.40', 21)]
+
+
+def test_edition_change_leaves_only_the_new_check_in_history(owner, priced_item, ebay):
+    ebay(result=(Decimal('9.90'), 7))
+    response = client_for(owner).patch(detail_url(priced_item.id), {'condition': 'loose'}, format='json')
+    assert history(response) == [('9.90', 7)]
