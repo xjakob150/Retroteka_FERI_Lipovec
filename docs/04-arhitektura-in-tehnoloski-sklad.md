@@ -53,7 +53,7 @@ Frontend teče na http://localhost:5173, API na http://localhost:8000/api/.
 
 | Področje | Tehnologije in orodja |
 |---|---|
-| Frontend | React, Vite, JavaScript, React Router, Axios, Tailwind CSS |
+| Frontend | React, Vite, JavaScript, React Router, Axios, Tailwind CSS, Recharts (grafi) |
 | Backend | Python, Django, Django REST Framework |
 | Podatkovna baza | PostgreSQL |
 | Avtentikacija | Django `auth`, `djangorestframework-simplejwt` |

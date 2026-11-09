@@ -2,6 +2,10 @@ import { formatEuro } from './CollectionItems'
 
 const date = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
 
+export function formatDate(value) {
+  return date.format(new Date(value)).replace('Sept', 'Sep')
+}
+
 function signed(value, text) {
   return `${Number(value) < 0 ? '−' : '+'}${text}`
 }
@@ -40,7 +44,7 @@ function RefreshPrice({ item, refreshing, refreshError, onRefresh }) {
 }
 
 export default function EstimatedPrice({ item, refreshing, refreshError, onRefresh }) {
-  const checked = item.price_checked_at && `Checked ${date.format(new Date(item.price_checked_at))}`
+  const checked = item.price_checked_at && `Checked ${formatDate(item.price_checked_at)}`
   const listings = `${item.listing_count} eBay ${item.listing_count === 1 ? 'listing' : 'listings'}`
   const refresh = (
     <RefreshPrice item={item} refreshing={refreshing} refreshError={refreshError} onRefresh={onRefresh} />

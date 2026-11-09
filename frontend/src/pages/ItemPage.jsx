@@ -4,6 +4,7 @@ import client from '../api/client'
 import { purchasePrice } from '../components/CollectionItems'
 import EditItemDialog from '../components/EditItemDialog'
 import EstimatedPrice from '../components/EstimatedPrice'
+import PriceHistory from '../components/PriceHistory'
 import MoveToMenu from '../components/MoveToMenu'
 import RemoveItemDialog from '../components/RemoveItemDialog'
 
@@ -180,7 +181,7 @@ export default function ItemPage() {
           {game.summary && <p className="text-gray-700">{game.summary}</p>}
         </section>
 
-        <div className="flex flex-col gap-6 self-start">
+        <div className="grid gap-6 self-start lg:grid-cols-2">
           <section aria-labelledby="this-copy" className="rounded-lg border border-gray-300 bg-white p-5">
             <h2 id="this-copy" className="mb-3 text-xl font-semibold">
               This copy
@@ -199,6 +200,9 @@ export default function ItemPage() {
             refreshError={refreshError}
             onRefresh={handleRefresh}
           />
+          <div className="lg:col-span-2">
+            <PriceHistory checks={item.price_checks} />
+          </div>
         </div>
       </div>
 

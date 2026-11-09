@@ -43,6 +43,7 @@
 - Skeniranje črtne kode s kamero telefona.
 - Ujemanje za menjavo med zbiratelji.
 - Evidenca konzol in dodatne opreme.
+- Opozorilo v obrazcu za urejanje izvoda, da sprememba platforme, regije ali stanja izbriše zgodovino cen.
 
 ## Out of scope
 

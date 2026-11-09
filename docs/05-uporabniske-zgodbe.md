@@ -277,7 +277,7 @@
 4. **Scenario – changing the release**
    - **Given** an item has three price checks,
    - **When** the owner changes its platform, region or condition,
-   - **Then** a warning says the price history will be cleared; after confirming, the old checks are removed and a new price is looked up.
+   - **Then** the old checks are removed and a new price is looked up. The MVP shows no warning before saving; a warning is a later extension.
 
 ### US-16 – Collection value
 
