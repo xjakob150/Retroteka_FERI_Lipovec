@@ -2,6 +2,7 @@ from django.db import IntegrityError, transaction
 from rest_framework import serializers
 
 from games.models import Game, GameRelease, Platform
+from pricing.serializers import PriceCheckSerializer
 from pricing.services import can_refresh_price, clear_price_checks, price_difference
 
 from .models import Collection, CollectionItem
@@ -181,10 +182,11 @@ class ItemDetailSerializer(ItemSerializer):
         releases = game.releases.filter(platform__is_supported=True).select_related('platform').order_by(
             'platform__generation', 'platform__name',
         )
-        latest_check = item.price_checks.first()
+        checks = list(item.price_checks.all())
         difference, percent = price_difference(item.estimated_price, item.purchase_price)
         data.update({
-            'listing_count': latest_check.listing_count if latest_check else None,
+            'price_checks': PriceCheckSerializer(checks, many=True).data,
+            'listing_count': checks[0].listing_count if checks else None,
             'price_difference': None if difference is None else str(difference),
             'price_difference_percent': percent,
             'can_refresh_price': can_refresh_price(item),
