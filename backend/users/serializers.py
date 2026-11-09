@@ -68,7 +68,6 @@ class RegisterSerializer(serializers.Serializer):
             with transaction.atomic():
                 return User.objects.create_user(username, email, validated_data['password'])
         except IntegrityError:
-            # Sočasna registracija je prešla preverjanje, omejitev v bazi pa jo je zavrnila.
             if User.objects.filter(username__iexact=username).exists():
                 raise serializers.ValidationError({'username': [USERNAME_TAKEN]})
             raise serializers.ValidationError({'email': [EMAIL_REGISTERED]})

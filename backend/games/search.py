@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 
 
 def save_games(igdb_games):
-    """Zapiše igre iz odjemalca IGDB v bazo in jih vrne v enakem vrstnem redu (ADR-0006)."""
     platform_ids = {release['platform_igdb_id'] for game in igdb_games for release in game['releases']}
     platforms = {
         platform.igdb_id: platform
@@ -34,8 +33,6 @@ def save_games(igdb_games):
                     'synced_at': synced_at,
                 },
             )
-            # Izdaje se samo dodajajo in posodabljajo; izdaja, ki je IGDB ne vrne več, ostane,
-            # da izvodi na tej platformi ostanejo veljavni.
             for release in data['releases']:
                 platform = platforms.get(release['platform_igdb_id'])
                 if platform is None:
@@ -51,12 +48,10 @@ def save_games(igdb_games):
 
 
 def search_saved_games(query, limit=20, offset=0, platform=None):
-    """Rezerva ob izpadu IGDB: vrne (igre, skupno število) iz shranjenih iger."""
     if platform is None:
         games = Game.objects.filter(releases__platform__is_supported=True)
     else:
         games = Game.objects.filter(releases__platform=platform)
-    # Vsaka beseda mora biti v naslovu, vrstni red in velike črke niso pomembni.
     for word in query.split():
         games = games.filter(title__icontains=word)
     games = games.distinct().order_by('title', 'id')
@@ -64,7 +59,6 @@ def search_saved_games(query, limit=20, offset=0, platform=None):
 
 
 def search_games(query, page, platform=None):
-    """Vrne (igre, skupno število, ali so to shranjeni podatki) za eno stran iskanja."""
     offset = (page - 1) * PAGE_SIZE
     if platform is None:
         platform_ids = Platform.objects.filter(is_supported=True).values_list('igdb_id', flat=True)
@@ -80,7 +74,6 @@ def search_games(query, page, platform=None):
 
 
 def with_supported_releases(games):
-    # Naloži izdaje vseh iger z eno poizvedbo in ohrani vrstni red iskanja.
     releases = GameRelease.objects.filter(platform__is_supported=True).select_related('platform')
     loaded = Game.objects.filter(pk__in=[game.pk for game in games]).prefetch_related(
         Prefetch('releases', queryset=releases.order_by('platform__generation', 'platform__name')),

@@ -1,3 +1,4 @@
+from datetime import timedelta
 from decimal import Decimal
 
 import pytest
@@ -349,3 +350,83 @@ def test_collection_list_of_items_includes_estimated_price(owner, payload, ebay)
     add(owner, payload)
     [item] = client_for(owner).get(f"/api/collections/{payload['collection']}/").data['items']
     assert item['estimated_price'] == '18.50'
+
+
+def refresh_url(item_id):
+    return f'{URL}{item_id}/refresh-price/'
+
+
+def checked_yesterday(item):
+    CollectionItem.objects.filter(pk=item.pk).update(price_checked_at=timezone.now() - timedelta(days=1))
+
+
+def test_refresh_url_name():
+    assert reverse('item-refresh-price', args=[3]) == refresh_url(3)
+
+
+def test_owner_refreshes_price_checked_yesterday(owner, priced_item, ebay):
+    checked_yesterday(priced_item)
+    fake = ebay(result=(Decimal('21.00'), 30))
+    response = client_for(owner).post(refresh_url(priced_item.id))
+    assert response.status_code == 200
+    assert (response.data['estimated_price'], response.data['listing_count']) == ('21.00', 30)
+    assert response.data['can_refresh_price'] is False
+    priced_item.refresh_from_db()
+    assert timezone.localdate(priced_item.price_checked_at) == timezone.localdate()
+    assert priced_item.price_checks.count() == 3
+    assert fake.calls == [priced_item]
+
+
+def test_second_refresh_on_the_same_day_is_rejected(owner, priced_item, ebay):
+    checked_yesterday(priced_item)
+    ebay(result=(Decimal('21.00'), 30))
+    client = client_for(owner)
+    assert client.post(refresh_url(priced_item.id)).status_code == 200
+    fake = ebay(result=(Decimal('25.00'), 31))
+    response = client.post(refresh_url(priced_item.id))
+    assert (response.status_code, response.data) == (429, {'detail': 'Available again tomorrow'})
+    assert fake.calls == []
+    assert priced_item.price_checks.count() == 3
+
+
+def test_item_checked_when_added_cannot_be_refreshed_the_same_day(owner, payload, ebay):
+    ebay(result=(Decimal('18.50'), 23))
+    item_id = add(owner, payload).data['id']
+    client = client_for(owner)
+    assert client.get(detail_url(item_id)).data['can_refresh_price'] is False
+    assert client.post(refresh_url(item_id)).status_code == 429
+
+
+def test_failed_refresh_keeps_previous_price_and_date(owner, priced_item):
+    checked_yesterday(priced_item)
+    priced_item.refresh_from_db()
+    before = (priced_item.estimated_price, priced_item.price_checked_at)
+    response = client_for(owner).post(refresh_url(priced_item.id))
+    assert (response.status_code, response.data) == (503, {'detail': 'The price cannot be refreshed right now'})
+    priced_item.refresh_from_db()
+    assert (priced_item.estimated_price, priced_item.price_checked_at) == before
+    assert priced_item.price_checks.count() == 2
+    assert client_for(owner).get(detail_url(priced_item.id)).data['can_refresh_price'] is True
+
+
+def test_item_without_any_check_can_be_refreshed(owner, payload, ebay):
+    item_id = add(owner, payload).data['id']
+    client = client_for(owner)
+    assert client.get(detail_url(item_id)).data['can_refresh_price'] is True
+    ebay(result=(None, 0))
+    response = client.post(refresh_url(item_id))
+    assert response.status_code == 200
+    assert (response.data['estimated_price'], response.data['listing_count']) == (None, 0)
+
+
+@pytest.mark.parametrize('role', [User.Role.COLLECTOR, User.Role.MODERATOR, User.Role.ADMIN])
+def test_other_users_cannot_refresh_price(priced_item, role, ebay):
+    checked_yesterday(priced_item)
+    fake = ebay(result=(Decimal('21.00'), 30))
+    other = User.objects.create_user('ana', 'ana@example.com', 'dolgo-geslo-1', role=role)
+    assert client_for(other).post(refresh_url(priced_item.id)).status_code == 404
+    assert fake.calls == []
+
+
+def test_guest_cannot_refresh_price(priced_item):
+    assert APIClient().post(refresh_url(priced_item.id)).status_code == 401

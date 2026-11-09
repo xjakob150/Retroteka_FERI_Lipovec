@@ -4,7 +4,6 @@ from .models import CollectionItem
 
 
 def owned_by(user, games):
-    """Za vsako igro vrne pare platforme in zbirke, v katerih ima uporabnik vsaj en izvod (US-10)."""
     pairs = (
         CollectionItem.objects.filter(collection__user=user, game__in=games)
         .values(

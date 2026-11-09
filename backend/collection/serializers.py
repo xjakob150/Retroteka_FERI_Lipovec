@@ -2,7 +2,7 @@ from django.db import IntegrityError, transaction
 from rest_framework import serializers
 
 from games.models import Game, GameRelease, Platform
-from pricing.services import clear_price_checks, price_difference
+from pricing.services import can_refresh_price, clear_price_checks, price_difference
 
 from .models import Collection, CollectionItem
 
@@ -11,7 +11,6 @@ HIDDEN_CANNOT_BE_PUBLIC = 'A collection hidden by a moderator cannot be made pub
 NOT_OWN_COLLECTION = 'Select one of your collections.'
 NOT_RELEASED_ON_PLATFORM = 'Select a platform the game was released on.'
 UNKNOWN_GAME = 'Select a game from the search results.'
-# Sprememba katerega koli od teh polj naredi iz izvoda drugo izdajo, zato stare cene ne veljajo več (ADR-0013).
 PRICE_FIELDS = ('platform', 'region', 'condition')
 
 
@@ -35,7 +34,6 @@ class CollectionSerializer(serializers.ModelSerializer):
         return value
 
     def validate_is_public(self, value):
-        # Skrito zbirko lahko znova objavi samo moderator (US-12); ista vrednost ali umik v zasebno je dovoljen.
         collection = self.instance
         if collection is not None and collection.is_hidden and value and not collection.is_public:
             raise serializers.ValidationError(HIDDEN_CANNOT_BE_PUBLIC)
@@ -46,7 +44,6 @@ class CollectionSerializer(serializers.ModelSerializer):
             with transaction.atomic():
                 return Collection.objects.create(user=self.context['request'].user, **validated_data)
         except IntegrityError:
-            # Sočasna zahteva z istim imenom je prešla preverjanje, omejitev v bazi pa jo je zavrnila.
             raise serializers.ValidationError({'name': [DUPLICATE_NAME]})
 
     def update(self, instance, validated_data):
@@ -65,7 +62,6 @@ class CollectionListSerializer(CollectionSerializer):
         fields = CollectionSerializer.Meta.fields + ['item_count', 'covers']
 
     def get_covers(self, collection):
-        # Naslovnice prvih petih izvodov po naslovu; ista igra se lahko ponovi, ker je vsak izvod svoj zapis.
         return [item.game.cover_url for item in collection.items_by_title[:5]]
 
 
@@ -104,8 +100,6 @@ class CollectionDetailSerializer(CollectionSerializer):
 
 
 class ItemSerializer(serializers.ModelSerializer):
-    """Zapis izvoda; odgovor ima igro in platformo v enaki obliki kot seznam izvodov v zbirki."""
-
     class Meta:
         model = CollectionItem
         fields = [
@@ -125,7 +119,6 @@ class ItemSerializer(serializers.ModelSerializer):
                 'does_not_exist': NOT_RELEASED_ON_PLATFORM,
                 'incorrect_type': NOT_RELEASED_ON_PLATFORM,
             }},
-            # Prazen niz pride do validate_<polje>, ki vrne sporočilo "... is required" namesto "not a valid choice".
             'region': {'allow_blank': True, 'error_messages': required('Region')},
             'condition': {'allow_blank': True, 'error_messages': required('Condition')},
             'notes': {'max_length': 1000},
@@ -133,12 +126,10 @@ class ItemSerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Igre obstoječega izvoda ni mogoče zamenjati (US-09); napačna igra se popravi z novim izvodom.
         if self.instance is not None:
             self.fields['game'].read_only = True
 
     def validate_collection(self, collection):
-        # Tuja zbirka dobi isto sporočilo kot neobstoječa, da se ne izve, da obstaja.
         if collection.user_id != self.context['request'].user.id:
             raise serializers.ValidationError(NOT_OWN_COLLECTION)
         return collection
@@ -184,8 +175,6 @@ class ItemSerializer(serializers.ModelSerializer):
 
 
 class ItemDetailSerializer(ItemSerializer):
-    """Izvod z vsem, kar prikaže stran izvoda: opis igre in platforme, na katerih je izšla."""
-
     def to_representation(self, item):
         data = super().to_representation(item)
         game = item.game
@@ -198,6 +187,7 @@ class ItemDetailSerializer(ItemSerializer):
             'listing_count': latest_check.listing_count if latest_check else None,
             'price_difference': None if difference is None else str(difference),
             'price_difference_percent': percent,
+            'can_refresh_price': can_refresh_price(item),
         })
         data['game'].update({
             'release_year': game.release_year,
@@ -217,8 +207,6 @@ class ItemDetailSerializer(ItemSerializer):
 
 
 class PublicItemSerializer(serializers.ModelSerializer):
-    """Izvod v javni zbirki: brez nakupne cene in opomb (US-11)."""
-
     game = ItemGameSerializer(read_only=True)
     platform = ItemPlatformSerializer(read_only=True)
     region_label = serializers.CharField(source='get_region_display', read_only=True)

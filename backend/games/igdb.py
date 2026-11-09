@@ -10,11 +10,8 @@ TOKEN_URL = 'https://id.twitch.tv/oauth2/token'
 API_URL = 'https://api.igdb.com/v4/'
 TIMEOUT = 5
 RENEW_BEFORE = 60
-# IGDB dovoli 4 zahteve na sekundo za celo aplikacijo (ADR-0005).
 MIN_INTERVAL = 0.25
 COVER_URL = 'https://images.igdb.com/igdb/image/upload/t_cover_big/{}.jpg'
-# Vrste iger, ki se prodajajo kot samostojen izdelek: main game, standalone expansion,
-# remake, remaster, expanded game, port. Brez DLC, paketov, epizod, posodobitev in modifikacij.
 GAME_TYPES = (0, 4, 8, 9, 10, 11)
 SEARCH_FIELDS = (
     'name,cover.image_id,first_release_date,genres.name,summary,platforms,release_dates.platform,release_dates.y'
@@ -32,7 +29,6 @@ class RateLimiter:
         self._last = None
 
     def wait(self):
-        # Zaklep je zaseden tudi med čakanjem, zato se sočasne zahteve postavijo v vrsto.
         with self._lock:
             if self._last is not None:
                 delay = self._last + self.interval - time.monotonic()
@@ -95,7 +91,6 @@ class IGDBClient:
 
 
     def search(self, query, platform_ids, limit=20, offset=0):
-        """Vrne (igre, skupno število zadetkov) za igre, izdane na eni od podanih platform."""
         platform_ids = {int(platform_id) for platform_id in platform_ids}
         if not platform_ids:
             return [], 0
@@ -116,7 +111,6 @@ class IGDBClient:
 
 
 def clean_search_text(query):
-    # Narekovaj bi končal niz in dovolil vrivanje lastnih ukazov v poizvedbo IGDB.
     return ' '.join(query.replace('\\', ' ').replace('"', ' ').split())
 
 

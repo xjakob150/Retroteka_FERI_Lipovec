@@ -19,7 +19,6 @@ export default function PublicCollectionsPage() {
       .then((response) => current && setResult(response.data))
       .catch(() => current && setFailed(true))
       .finally(() => current && setLoading(false))
-    // Ob hitrem menjavanju strani se odgovor prejšnje strani zavrže.
     return () => {
       current = false
     }

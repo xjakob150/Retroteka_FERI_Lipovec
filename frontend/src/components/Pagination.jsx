@@ -1,4 +1,3 @@
-// Enako kot velikost strani v backendu (games/search.py in PUBLIC_PAGE_SIZE v collection/views.py).
 export const PAGE_SIZE = 20
 
 export default function Pagination({ result, loading, onPage, label }) {

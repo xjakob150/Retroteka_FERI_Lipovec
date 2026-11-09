@@ -13,11 +13,9 @@ SCOPE = 'https://api.ebay.com/oauth/api_scope'
 MARKETPLACE = 'EBAY_DE'
 TIMEOUT = 5
 RENEW_BEFORE = 60
-# Kategorija video iger; izloči vodiče, plakate in dodatke.
 VIDEO_GAMES_CATEGORY = '139973'
 MAX_LISTINGS = 50
 
-# Na EBAY_DE prodajalci pišejo nemško in angleško, zato so besede v obeh jezikih; skupina v oklepaju pomeni "ali".
 REGION_WORDS = {
     'pal': ['PAL'],
     'ntsc_u': ['NTSC', 'USA', 'US'],
@@ -28,13 +26,11 @@ CONDITION_WORDS = {
     'cib': ['OVP', 'CIB', 'complete', 'Anleitung'],
     'new': ['neu', 'new', 'sealed', 'versiegelt'],
 }
-# Pokvarjeni izvodi in paketi več iger bi popačili mediano; "Loose" pa ne sme vključevati oglasov z OVP.
 EXCLUDED_WORDS = ['defekt', 'Konvolut', 'Sammlung']
 EXCLUDED_FOR_CONDITION = {'loose': ['OVP']}
 
 
 def clean(text):
-    # Ločila, narekovaji in minus bi v poizvedbi eBaya pomenili skupino, frazo ali izključitev.
     return ' '.join(re.sub(r'[^\w]+', ' ', text).split())
 
 
@@ -46,7 +42,6 @@ def build_query(title, platform, region, condition):
     excluded = EXCLUDED_WORDS + EXCLUDED_FOR_CONDITION.get(condition, [])
     parts = [
         clean(title),
-        # Samo kratica: eBay besedne zveze v skupini, npr. "PlayStation 2", ne razume kot celote.
         clean(platform.abbreviation or platform.name),
         any_of(REGION_WORDS[region]),
         any_of(CONDITION_WORDS[condition]),
@@ -76,7 +71,6 @@ class EbayClient:
         try:
             response = requests.post(
                 TOKEN_URL,
-                # eBay zahteva ključa kot HTTP Basic, ne v telesu zahteve.
                 auth=(self.client_id, self.client_secret),
                 data={'grant_type': 'client_credentials', 'scope': SCOPE},
                 timeout=TIMEOUT,
@@ -104,11 +98,9 @@ class EbayClient:
             raise EbayError(f'eBay search failed: {error}') from error
 
     def price_for(self, item):
-        """Vrne (mediana v EUR, število oglasov) za izvod ali (None, 0), če ni oglasov (ADR-0012)."""
         data = self.search({
             'q': build_query(item.game.title, item.platform, item.region, item.condition),
             'category_ids': VIDEO_GAMES_CATEGORY,
-            # Samo fiksne cene: pri dražbi je cena trenutna ponudba, ne cena igre.
             'filter': 'buyingOptions:{FIXED_PRICE},priceCurrency:EUR',
             'limit': MAX_LISTINGS,
         })
