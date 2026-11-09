@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router'
 import client from '../api/client'
 import { VisibilityLabel } from '../components/CollectionCard'
+import { estimatedPrice } from '../components/CollectionItems'
 import ModeratorBar from '../components/ModeratorBar'
 import { useAuth } from '../context/AuthContext'
 
@@ -21,6 +22,9 @@ function PublicItemCard({ item }) {
       )}
       <p className="font-semibold break-words">{item.game.title}</p>
       <p className="text-sm text-gray-500">{details.join(' · ')}</p>
+      <p className={`mt-auto pt-2 ${item.estimated_price === null ? 'text-gray-500' : 'text-lg font-semibold'}`}>
+        {estimatedPrice(item)}
+      </p>
     </li>
   )
 }
@@ -88,7 +92,10 @@ export default function PublicCollectionPage() {
         <h1 className="text-3xl font-bold break-words">{collection.name}</h1>
         {collection.is_hidden && <VisibilityLabel collection={collection} />}
       </div>
-      <p className="mt-1 text-gray-500">by {collection.owner} · Public collection</p>
+      <p className="mt-2 flex items-center gap-2 text-gray-500">
+        <span aria-hidden="true" className="h-7 w-7 shrink-0 rounded-full bg-gray-200" />
+        by {collection.owner} · Public collection
+      </p>
       {collection.description && <p className="mt-1 text-gray-700">{collection.description}</p>}
 
       {isModerator && (
@@ -108,12 +115,12 @@ export default function PublicCollectionPage() {
         </p>
       )}
 
-      <div className="my-6 flex flex-wrap items-end gap-x-8 gap-y-2">
+      <div className="my-6 flex flex-wrap items-center gap-x-10 gap-y-2">
         <div>
           <p className="text-xs font-semibold tracking-wide text-gray-600 uppercase">Items</p>
-          <p className="text-2xl font-semibold">{collection.item_count}</p>
+          <p className="text-3xl font-semibold">{collection.item_count}</p>
         </div>
-        <p className="text-gray-500">Purchase prices and notes are private to the owner</p>
+        <p className="text-gray-500 sm:pt-4">Purchase prices and notes are private to the owner</p>
       </div>
 
       {collection.items.length > 0 ? (

@@ -11,6 +11,7 @@ from rest_framework.test import APIClient
 from collection.models import Collection, CollectionItem
 from games import search
 from games.models import Game, Platform
+from pricing.services import record_price_check
 
 User = get_user_model()
 
@@ -122,6 +123,15 @@ def test_guest_opens_public_collection_without_prices_or_notes(public_with_item)
     for item in response.data['items']:
         assert not {'purchase_price', 'notes', 'can_refresh_price', 'price_checks'} & item.keys()
     assert b'Skrivna opomba' not in response.content
+    assert b'12.00' not in response.content
+
+
+def test_public_items_show_estimated_price(public_with_item):
+    record_price_check(public_with_item.items.get(game__title='Okami'), '24.00', 10)
+    response = client_for().get(f'{URL}{public_with_item.id}/')
+    assert [(item['game']['title'], item['estimated_price']) for item in response.data['items']] == [
+        ('Gran Turismo 4', None), ('Okami', '24.00'),
+    ]
     assert b'12.00' not in response.content
 
 

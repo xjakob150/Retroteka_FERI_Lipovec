@@ -216,7 +216,7 @@ class PublicItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CollectionItem
-        fields = ['id', 'game', 'platform', 'region', 'region_label', 'condition', 'condition_label']
+        fields = ['id', 'game', 'platform', 'region', 'region_label', 'condition', 'condition_label', 'estimated_price']
         read_only_fields = fields
 
 

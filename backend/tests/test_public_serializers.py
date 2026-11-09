@@ -11,7 +11,7 @@ from games.models import Game, Platform
 
 pytestmark = pytest.mark.django_db
 
-PRIVATE_KEYS = {'purchase_price', 'notes', 'user', 'estimated_price', 'hidden_by'}
+PRIVATE_KEYS = {'purchase_price', 'notes', 'user', 'hidden_by'}
 
 
 @pytest.fixture
