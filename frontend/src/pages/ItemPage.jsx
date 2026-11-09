@@ -25,7 +25,30 @@ export default function ItemPage() {
   const [removing, setRemoving] = useState(false)
   const [moving, setMoving] = useState(false)
   const [notice, setNotice] = useState('')
+  const [refreshing, setRefreshing] = useState(false)
+  const [refreshError, setRefreshError] = useState(false)
   const navigate = useNavigate()
+
+  async function handleRefresh() {
+    setRefreshError(false)
+    setRefreshing(true)
+    try {
+      const response = await client.post(`/items/${item.id}/refresh-price/`)
+      setItem(response.data)
+    } catch (error) {
+      if (error.response?.status === 429) {
+        try {
+          const response = await client.get(`/items/${item.id}/`)
+          setItem(response.data)
+        } catch {
+          setRefreshError(true)
+        }
+      } else {
+        setRefreshError(true)
+      }
+    }
+    setRefreshing(false)
+  }
 
   async function handleMove(target) {
     setNotice('')
@@ -170,7 +193,12 @@ export default function ItemPage() {
               <Row label="Notes">{item.notes || '—'}</Row>
             </dl>
           </section>
-          <EstimatedPrice item={item} />
+          <EstimatedPrice
+            item={item}
+            refreshing={refreshing}
+            refreshError={refreshError}
+            onRefresh={handleRefresh}
+          />
         </div>
       </div>
 
