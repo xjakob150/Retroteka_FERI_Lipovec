@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
 import client from '../api/client'
+import { VisibilityLabel } from '../components/CollectionCard'
 import Pagination from '../components/Pagination'
 
 export default function PublicCollectionsPage() {
@@ -48,21 +49,32 @@ export default function PublicCollectionsPage() {
 
       {result?.results.length > 0 && (
         <>
-          <ul className="divide-y divide-gray-200 rounded-lg border border-gray-300 bg-white">
+          <ul className="divide-y divide-gray-200 overflow-hidden rounded-lg border border-gray-300 bg-white">
             {result.results.map((collection) => (
-              <li key={collection.id} className="flex items-center justify-between gap-4 p-4">
-                <div className="min-w-0">
-                  <Link
-                    to={`/public/${collection.id}`}
-                    className="text-lg font-semibold break-words hover:underline"
-                  >
-                    {collection.name}
-                  </Link>
-                  <p className="text-gray-500">by {collection.owner}</p>
-                </div>
-                <p className="shrink-0 text-gray-600">
-                  {collection.item_count} {collection.item_count === 1 ? 'item' : 'items'}
-                </p>
+              <li key={collection.id}>
+                <Link
+                  to={`/public/${collection.id}`}
+                  className="flex items-center gap-4 p-4 hover:bg-gray-50 focus-visible:bg-gray-50"
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-lg font-semibold break-words">{collection.name}</span>
+                      {collection.is_hidden && <VisibilityLabel collection={collection} />}
+                    </div>
+                    <p className="mt-1 flex items-center gap-2 text-sm text-gray-500">
+                      <span aria-hidden="true" className="h-5 w-5 shrink-0 rounded-full bg-gray-200" />
+                      by {collection.owner}
+                    </p>
+                    {collection.description && <p className="mt-1 truncate text-gray-600">{collection.description}</p>}
+                  </div>
+                  <div className="shrink-0 text-right">
+                    <p className="text-xs font-semibold tracking-wide text-gray-600 uppercase">Items</p>
+                    <p className="text-xl font-semibold">{collection.item_count}</p>
+                  </div>
+                  <span aria-hidden="true" className="shrink-0 text-2xl text-gray-400">
+                    ›
+                  </span>
+                </Link>
               </li>
             ))}
           </ul>
