@@ -1,4 +1,9 @@
+
 # Retroteka
+
+[![CI/CD](https://github.com/nei223/Retroteka_FERI_Lipovec/actions/workflows/ci-cd.yml/badge.svg?branch=chore/ci-cd)](https://github.com/nei223/Retroteka_FERI_Lipovec/actions/workflows/ci-cd.yml)
+
+**Delujoča aplikacija:** https://retroteka-frontend.onrender.com
 
 Spletna evidenca zbirk fizičnih retro iger.
 
@@ -14,11 +19,11 @@ Zbiratelji retro iger zbirko pogosto vodijo v Excelu ali po spominu, zato ne ved
 | Avtentikacija | Django `auth`, JWT (`djangorestframework-simplejwt`) |
 | Lokalni razvoj | Docker, Docker Compose |
 | Zunanji API-ji | IGDB API (podatki o igrah), eBay Browse API (okvirne cene) |
-| Drugo | Git, pytest |
+| Drugo | Git, pytest, GitHub Actions, Render |
 
 ## Struktura repozitorija
 
-```
+```text
 backend/    Django + DRF REST API
 frontend/   React SPA
 docs/       projektna dokumentacija in ADR-ji
@@ -60,6 +65,19 @@ docker compose exec backend pytest
 docker compose exec backend pytest tests/test_setup.py::test_runs_on_postgresql
 ```
 
+## CI/CD
+
+Za avtomatizacijo integracije in dostave je uporabljen GitHub Actions.
+
+Ob spremembah kode se izvajajo naslednji koraki:
+
+1. **Lint** – preverjanje kakovosti kode Python in JavaScript.
+2. **Build** – gradnja aplikacije in Docker slik ter shranjevanje artefaktov.
+3. **Test** – izvajanje avtomatiziranih testov na PostgreSQL in priprava poročila o pokritosti kode.
+4. **Deploy** – po uspešno opravljenih preverjanjih se Docker slike objavijo v GitHub Container Registry (GHCR), nato se sproži deploy na Render.
+
+Trenutno je samodejni deploy nastavljen za vejo `chore/ci-cd`.
+
 ## Dokumentacija
 
 Celotna dokumentacija je v mapi [`docs/`](docs/):
@@ -70,5 +88,6 @@ Celotna dokumentacija je v mapi [`docs/`](docs/):
 4. [Arhitektura in tehnološki sklad](docs/04-arhitektura-in-tehnoloski-sklad.md)
 5. [Uporabniške zgodbe](docs/05-uporabniske-zgodbe.md)
 6. [Wireframes](docs/06-wireframes.md)
+7. [Pregled projekta](docs/07-pregled-projekta.md)
 
 Arhitekturne odločitve so zapisane kot ADR-ji (format MADR) v mapi [`docs/adr/`](docs/adr/).
