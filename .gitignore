@@ -51,3 +51,5 @@ docker-compose.override.yml
 # Operacijski sistem
 .DS_Store
 Thumbs.db
+
+coverage/
